@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>DCCS test</title>
+    <script src="js/test.js"></script>
+    
+    <link rel="stylesheet" href="css/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+
+<body onload="init()">
+    <div class="container">
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'Administrator')">Administrator</button>
+            <button class="tablinks" onclick="openTab(event, 'Formular')">Formular</button>
+        </div>
+        <div id="Administrator" class="tabcontent">
+            <h3>Administrator</h3>
+            <div class="searchBlock">
+                <label class="item">Search</label><input class="item" id="search" type="text" placeholder="Search...."><input
+                    class="item" type="button" onclick="searchForFormular();" value="Search">
+                
+            </div>
+            <hr>
+            <div id="form block"></div>
+            <div id="saveButton"></div>
+        </div>
+
+        <div id="Formular" class="tabcontent">
+            <h3>Formular</h3>
+            <p>Formular content</p>
+        </div>
+    </div>
+</body>
+
+</html>
