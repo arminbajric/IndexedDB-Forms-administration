@@ -113,10 +113,13 @@ newAdd.onclick = "createNewRowForm()";
 
 //function which will create one row in form when it is called
 function createNewRowForm() {
-  
+    var element = document.getElementById('Add' + (rowsCount - 1));
+    if (element) {
+        element.remove();
+    }
     //getting the form wrapper where all elements will be added
     var node = document.getElementById("form block");
-   //creating new div element which will be one row in form
+    //creating new div element which will be one row in form
     var newDiv = document.createElement('div');
     //assigning id and class to div element
     newDiv.className = "formRow";
@@ -125,22 +128,22 @@ function createNewRowForm() {
     //creating label for input label
     var newLabel = document.createElement('label');
     newLabel.textContent = 'Element ' + rowsCount + ' :';
-    newLabel.className = "formLabel " + rowsCount;
+    newLabel.className = "leftMarginForm";
     newLabel.id = "lbl " + rowsCount;
     //adding label to div element,label have id and class assigned
     newDiv.appendChild(newLabel);
     //creating text input for label which was created above
     var newInput = document.createElement('input');
-    newInput.placeholder = 'Element 1...';
+    newInput.placeholder = 'Element ' + rowsCount + '...';
     newInput.type = "text";
     newInput.id = "inpt" + rowsCount;
-    newInput.className = "formInput " + rowsCount;
+    newInput.className = "leftMarginForm";
     //adding created text input to div element
     newDiv.appendChild(newInput);
     //kreiranje dropdown liste
     var newInputDrop = document.createElement('select');
     newInputDrop.id = "inputType" + rowsCount;
-    newInputDrop.className = "type" + rowsCount;
+    newInputDrop.className = "leftMarginForm";
     var option1 = document.createElement('option');
     //kreiranje opcija liste
     option1.text = "Text Box";
@@ -172,10 +175,12 @@ function createNewRowForm() {
     opt3.text = "Numeric";
     newTypeDrop.add(opt3);
     newTypeDrop.id = "typeDrop " + rowsCount;
+    newTypeDrop.className = "leftMarginForm";
     newDiv.append(newTypeDrop);
     var newAdd = document.createElement('input');
     newAdd.type = "button";
     newAdd.value = "Add new";
+    newAdd.className = "leftMarginForm";
     newAdd.id = "Add" + rowsCount;
     newAdd.onclick = createNewRowForm;
 
@@ -193,36 +198,31 @@ function createNewRowForm() {
 
 function createAdditions(id, selected) {
     console.log(id + selected);
-    var row=id.charAt(9);
+    var row = id.charAt(9);
     if (id.charAt(0) === 'i' && selected == 'Radio Button') {
-        var element =document.getElementById('checkCoun'+id.charAt(9));
-        if(element)
-        {
+        var element = document.getElementById('checkCoun' + id.charAt(9));
+        if (element) {
             element.remove();
         }
         removeCheckRadioInputs(id.charAt(9));
         createRadioInputCount(id);
     }
-    else if(id.charAt(0) === 'i' && selected == 'Check Box')
-    {
-        var element =document.getElementById('radioCoun'+id.charAt(9));
-        if(element)
-        {
+    else if (id.charAt(0) === 'i' && selected == 'Check Box') {
+        var element = document.getElementById('radioCoun' + id.charAt(9));
+        if (element) {
             element.remove();
         }
         removeCheckRadioInputs(id.charAt(9));
-createCheckBoxInputCount(id);
+        createCheckBoxInputCount(id);
     }
-    else if(id.charAt(0) === 'i' && selected == 'Text Box'){
+    else if (id.charAt(0) === 'i' && selected == 'Text Box') {
         removeCheckRadioInputs(id.charAt(9));
-        var element =document.getElementById('checkCoun'+id.charAt(9));
-        if(element)
-        {
+        var element = document.getElementById('checkCoun' + id.charAt(9));
+        if (element) {
             element.remove();
         }
-        var element1 =document.getElementById('radioCoun'+id.charAt(9));
-        if(element1)
-        {
+        var element1 = document.getElementById('radioCoun' + id.charAt(9));
+        if (element1) {
             element1.remove();
         }
     }
@@ -312,6 +312,7 @@ function createRadioInputCount(id) {
     var option3 = document.createElement('option');
     option3.text = "3"
     newRadioCountInput.add(option3);
+    newRadioCountInput.className = "leftMarginForm";
     var typeDrop = document.getElementById('row' + row)
     existingDiv.insertBefore(newRadioCountInput, typeDrop.childNodes[3]);
     document.getElementById("radioCoun" + row).setAttribute("onchange", "createRadio(this.id,this.value);");
@@ -322,19 +323,20 @@ function createCheckBoxInputCount(id) {
 
     var row = id.charAt(9);
     var existingDiv = document.getElementById('row' + row);
-    var newRadioCountInput = document.createElement('select');
-    newRadioCountInput.id = "checkCoun" + row;
+    var newCheckCountInput = document.createElement('select');
+    newCheckCountInput.id = "checkCoun" + row;
     var option1 = document.createElement('option');
     option1.text = "1"
-    newRadioCountInput.add(option1);
+    newCheckCountInput.add(option1);
     var option2 = document.createElement('option');
     option2.text = "2"
-    newRadioCountInput.add(option2);
+    newCheckCountInput.add(option2);
     var option3 = document.createElement('option');
     option3.text = "3"
-    newRadioCountInput.add(option3);
+    newCheckCountInput.add(option3);
+    newCheckCountInput.className = "leftMarginForm";
     var typeDrop = document.getElementById('row' + row)
-    existingDiv.insertBefore(newRadioCountInput, typeDrop.childNodes[3]);
+    existingDiv.insertBefore(newCheckCountInput, typeDrop.childNodes[3]);
     document.getElementById("checkCoun" + row).setAttribute("onchange", "createCheckBox(this.id,this.value);");
 
     createCheckBox(id, 1);
@@ -381,7 +383,7 @@ function createRadio(id, value) {
 
         }
     }
-    //if the user reselect option 3 this block will remove third radio and the same will be added at the end of function
+    //if the user reselects option 3 this block will remove third radio and the same will be added at the end of function
     if (value === '3') {
         //if radio button 2 doesn't exist and count 3 is called it will add radio 2,and later at the end it will add radio 3 button
         var element2 = document.getElementById('count' + row + " " + 2);
@@ -479,23 +481,23 @@ function createCheckBox(id, value) {
     existingDiv.appendChild(newCheckInput);
 
 }
-function removeCheckRadioInputs(row){
+function removeCheckRadioInputs(row) {
     var element1 = document.getElementById('count' + row + " " + 1);
-        console.log(typeof (element));
-        if (element1) {
+    console.log(typeof (element));
+    if (element1) {
 
-            element1.remove()
+        element1.remove()
 
-        }
-        var element2 = document.getElementById('count' + row + " " + 2);
-        if (element2) {
+    }
+    var element2 = document.getElementById('count' + row + " " + 2);
+    if (element2) {
 
-            element2.remove();
+        element2.remove();
 
-        }
-        var element3 = document.getElementById('count' + row + " " + 3);
-        if (element3) {
+    }
+    var element3 = document.getElementById('count' + row + " " + 3);
+    if (element3) {
 
-            element3.remove();
-        }
+        element3.remove();
+    }
 }
