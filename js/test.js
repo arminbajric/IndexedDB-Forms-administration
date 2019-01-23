@@ -24,7 +24,7 @@ function openTab(evt, tabName) {
 function init() {
     //prikazivanje administrator taba tokom učitavanja stranice
     document.getElementById("Administrator").style.display = "block";
-//provjera da li browser podržava indexedDb
+    //provjera da li browser podržava indexedDb
     if (checkSupportDB()) {
 
         var openRequest = indexedDB.open("testFormular", 1);
@@ -91,55 +91,134 @@ function searchForFormular(value) {
                     //pomjeranje kursora i ponovno provjeravanje podudaranja
                     cursor.continue();
                 } else {
-                   createNewRowForm()
-                   var node = document.getElementById("saveButton");
-                   
-                   var saveButton=document.createElement('button');
-                   saveButton.onclick="saveForm()";
-                   saveButton.value="Save";
-                   saveButton.textContent="Save";
-                   saveButton.className="saveButton";
-                   node.append(saveButton);
+                    createNewRowForm();
+                    var node = document.getElementById("saveButton");
+
+                    var saveButton = document.createElement('button');
+                    saveButton.onclick = "saveForm()";
+                    saveButton.value = "Save";
+                    saveButton.textContent = "Save";
+                    saveButton.className = "saveButton";
+                    node.append(saveButton);
 
                 }
             }
         }
     }
 }
-function createNewRowForm() {
-    //dohvatanje elementa form block
-                    var node = document.getElementById("form block");
-                    //kreiranje novog div elementa u kojem će biti smještene opcije
-                    var newDiv = document.createElement('div');
-                    //dodjeljivanje klase kreiranom div elementu
-                    newDiv.className = "formRow";
-                    node.append(newDiv);
-                    //kreiranje labele za opciju
-                    var newLabel = document.createElement('label');
-                    newLabel.textContent = 'Element 1 :';
-                    newLabel.className = "formLabel"+rowsCount;
-                    //dodavanje labele div elementu
-                    newDiv.append(newLabel);
-                    var newInput = document.createElement('input');
-                    newInput.placeholder = 'Element 1...';
-                    newInput.type = "text";
-                    newInput.id = rowsCount;
-                    newInput.className = "formInput"+rowsCount;
-                    newDiv.append(newInput);
-                    var newDrop = document.createElement('select');
-                    var option1 = document.createElement("option");
-                    option1.text = "Text Box";
-                    newDrop.add(option1);
-                    var option2 = document.createElement("option");
-                    option2.text = "Check Box";
-                    newDrop.add(option2);
-                    var option3 = document.createElement("option");
-                    option3.text = "Radio Button";
-                    newDrop.add(option3);
-                    newDrop.className = "formDrop"+rowsCount;
-                    newDiv.append(newDrop);
-                    var line = document.createElement('hr');
-                    newDiv.append(line);
-                    rowsCount++;
- }
+var newAdd = document.createElement('input');
+newAdd.type = "button";
+newAdd.textContent = "Add new";
+newAdd.id = "Add" + rowsCount;
+newAdd.onclick = "createNewRowForm()";
 
+
+
+
+
+
+
+function createNewRowForm() {
+    if (rowsCount > 1) {
+        //  document.getElementById('id'+(rowsCount-1)).remove('Add'+(rowsCount-1));
+    }
+    //dohvatanje elementa form block
+    var node = document.getElementById("form block");
+    //kreiranje novog div elementa u kojem će biti smještene opcije
+    var newDiv = document.createElement('div');
+    //dodjeljivanje klase kreiranom div elementu
+    newDiv.className = "formRow";
+    newDiv.id = "row" + rowsCount;
+
+    //kreiranje labele za opciju
+    var newLabel = document.createElement('label');
+    newLabel.textContent = 'Element ' + rowsCount + ' :';
+    newLabel.className = "formLabel " + rowsCount;
+    newLabel.id = "lbl " + rowsCount;
+    //dodavanje labele div elementu
+    newDiv.appendChild(newLabel);
+    //kreiranje inputa za labelu
+    var newInput = document.createElement('input');
+    newInput.placeholder = 'Element 1...';
+    newInput.type = "text";
+    newInput.id = "inpt" + rowsCount;
+    newInput.className = "formInput " + rowsCount;
+    //dodavanje inputa kreiranom divu
+    newDiv.appendChild(newInput);
+    //kreiranje dropdown liste
+    var newInputDrop = document.createElement('select');
+    newInputDrop.id = "inputType" + rowsCount;
+    newInputDrop.className = "type" + rowsCount;
+    var option1 = document.createElement('option');
+    //kreiranje opcija liste
+    option1.text = "Text Box";
+    //dodavanje opcija listi
+    newInputDrop.add(option1);
+    var option2 = document.createElement("option");
+    option2.text = "Check Box";
+    newInputDrop.add(option2);
+    var option3 = document.createElement("option");
+    option3.text = "Radio Button";
+    option3.id = "opt" + rowsCount;
+
+
+    newInputDrop.add(option3);
+    newInputDrop.className = "formDrop " + rowsCount;
+    //dodavanje liste prethodno kreiranom div elementu
+    newDiv.appendChild(newInputDrop);
+    var newTypeDrop = document.createElement('select');
+    newTypeDrop.id = "type" + rowsCount;
+    var opt1 = document.createElement('option');
+    //kreiranje opcija liste
+    opt1.text = "None";
+    //dodavanje opcija listi
+    newTypeDrop.add(opt1);
+    var opt2 = document.createElement("option");
+    opt2.text = "Mandatory";
+    newTypeDrop.add(opt2);
+    var opt3 = document.createElement("option");
+    opt3.text = "Numeric";
+    newTypeDrop.add(opt3);
+    newTypeDrop.className = "typeDrop " + rowsCount;
+    newDiv.append(newTypeDrop);
+    var newAdd = document.createElement('input');
+    newAdd.type = "button";
+    newAdd.value = "Add new";
+    newAdd.id = "Add" + rowsCount;
+    newAdd.onclick = createNewRowForm;
+
+    newDiv.append(newAdd);
+    //kreiranje i dodavanje horizontalne linije
+    
+    //povećavanje varijable zbog identificiranja redova formulara
+    rowsCount++;
+    console.log(rowsCount);
+    node.appendChild(newDiv);
+    document.getElementById("inputType" + (rowsCount - 1)).setAttribute("onchange", "createAdditions(this.id,this.value);");
+}
+
+
+
+function createAdditions(id,selected) {
+    console.log(id);
+    if(id.charAt(0)==='i')
+    {
+        createRadio(id);
+        createRadioInputCount();
+    
+
+    
+}
+}
+function createRadio(id){
+    var row=id.charAt(9);
+    var newRadioInput = document.createElement('input');
+    newRadioInput.type = "text";
+    newRadioInput.placeholder = "Radio button 1 label...";
+    var existingDiv = document.getElementById("row" + row);
+    existingDiv.appendChild(newRadioInput);
+    
+}
+function createRadioInputCount(id){
+
+}
