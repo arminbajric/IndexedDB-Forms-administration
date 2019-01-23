@@ -58,12 +58,6 @@ function checkSupportDB() {
     }
     return false;
 }
-
-
-
-
-
-
 //metoda koja pretražuje  već snimljenje formulare u bazi
 function searchForFormular(value) {
     //dohvatanje vrijednosti upisane u pretragu
@@ -179,7 +173,7 @@ function createNewRowForm() {
     var opt3 = document.createElement("option");
     opt3.text = "Numeric";
     newTypeDrop.add(opt3);
-    newTypeDrop.className = "typeDrop " + rowsCount;
+    newTypeDrop.id = "typeDrop " + rowsCount;
     newDiv.append(newTypeDrop);
     var newAdd = document.createElement('input');
     newAdd.type = "button";
@@ -189,7 +183,7 @@ function createNewRowForm() {
 
     newDiv.append(newAdd);
     //kreiranje i dodavanje horizontalne linije
-    
+
     //povećavanje varijable zbog identificiranja redova formulara
     rowsCount++;
     console.log(rowsCount);
@@ -199,26 +193,104 @@ function createNewRowForm() {
 
 
 
-function createAdditions(id,selected) {
-    console.log(id);
-    if(id.charAt(0)==='i')
-    {
-        createRadio(id);
-        createRadioInputCount();
-    
+function createAdditions(id, selected) {
+    console.log(id + selected);
+    if (id.charAt(0) === 'i' && selected == 'Radio Button') {
 
-    
+        createRadioInputCount(id);
+
+
+
+    }
 }
-}
-function createRadio(id){
-    var row=id.charAt(9);
-    var newRadioInput = document.createElement('input');
+function createRadio(id, value) {
+   
+    //this will return the row where radio count is called
+    var row = id.charAt(9);
+    console.log(row);
+    //if user change it's mind and chose one input this block will remove all radio inputs and add one at the end of function
+    if (value === '1') {
+        var element1 =  document.getElementById('count'+row+" "+1);
+        console.log(typeof(element));
+        if (element1) {
+         
+              element1.remove()
+         
+        }
+        var element2 =  document.getElementById('count'+row+" "+2);
+        if (element2) {
+         
+              element2.remove();
+           
+        }
+        var element3 =  document.getElementById('count'+row+" "+3);
+        if (element3) {
+           
+              element3.remove();
+        }
+    }
+    //this block will remove  radios 2 and 3 an radio 2 will be added at the end of the function
+    if (value ==='2') {
+        var element2 =  document.getElementById('count'+row+" "+2);
+        console.log(element2);
+        if (element2) {
+          
+               element2.remove();
+          
+        }
+        var element3 =  document.getElementById('count'+row+" "+3);
+        if (element3) {
+          
+               element3.remove();
+           
+        }
+    }
+    //if the user reselect option 3 this block will remove third radio and the same will be added at the end of function
+    if (value === '3') {
+        //if radio button 2 doesn't exist and count 3 is called it will add radio 2,and later at the end it will add radio 3 button
+        var element2 =  document.getElementById('count'+row+" "+2);
+        if(!element2){
+            var newRadioInput = document.createElement('input');
     newRadioInput.type = "text";
-    newRadioInput.placeholder = "Radio button 1 label...";
+    newRadioInput.id ="count"+row+" " +(value-1);
+    newRadioInput.placeholder = "Radio button "+(value-1)+" label...";
     var existingDiv = document.getElementById("row" + row);
     existingDiv.appendChild(newRadioInput);
-    
-}
-function createRadioInputCount(id){
+        }
+        var element3 =  document.getElementById('count'+row+" "+3);
+        if (element3) {
+          
+              element3.remove();
+          
+        }
+    }
 
+    var newRadioInput = document.createElement('input');
+    newRadioInput.type = "text";
+    newRadioInput.id ="count"+row+" " +value;
+    newRadioInput.placeholder = "Radio button "+value+" label...";
+    var existingDiv = document.getElementById("row" + row);
+    existingDiv.appendChild(newRadioInput);
+
+}
+function createRadioInputCount(id) {
+
+    var row = id.charAt(9);
+    var existingDiv = document.getElementById('row' + row);
+    var newRadioCountInput = document.createElement('select');
+    newRadioCountInput.id = "radioCoun" + row;
+    var option1 = document.createElement('option');
+    option1.text = "1"
+    newRadioCountInput.add(option1);
+    var option2 = document.createElement('option');
+    option2.text = "2"
+    newRadioCountInput.add(option2);
+    var option3 = document.createElement('option');
+    option3.text = "3"
+    newRadioCountInput.add(option3);
+    var typeDrop = document.getElementById('row' + row)
+    existingDiv.insertBefore(newRadioCountInput, typeDrop.childNodes[3]);
+    document.getElementById("radioCoun" + row).setAttribute("onchange", "createRadio(this.id,this.value);");
+
+    createRadio(id, 1);
 }
