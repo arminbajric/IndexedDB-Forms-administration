@@ -79,6 +79,7 @@ function searchForFormular(value) {
             getCursorRequest.onsuccess = e => {
                 const cursor = e.target.result;
                 cursor
+
                 //poređenje kursora i vrijednosti iz unosa
                 if (cursor === search.value) {
                     console.log(cursor.value);
@@ -92,9 +93,10 @@ function searchForFormular(value) {
                     saveButton.onclick = "saveForm()";
                     saveButton.value = "Save";
                     saveButton.textContent = "Save";
+                    saveButton.id = "saveForm";
                     saveButton.className = "saveButton";
                     node.append(saveButton);
-
+                    document.getElementById('saveForm').setAttribute("onclick", 'saveForm()');
                 }
             }
         }
@@ -204,7 +206,7 @@ function createAdditions(id, selected) {
         if (element) {
             element.remove();
         }
-        removeCheckRadioInputs(id.charAt(9));
+        removeCheckInputs(id.charAt(9));
         createRadioInputCount(id);
     }
     else if (id.charAt(0) === 'i' && selected == 'Check Box') {
@@ -212,11 +214,12 @@ function createAdditions(id, selected) {
         if (element) {
             element.remove();
         }
-        removeCheckRadioInputs(id.charAt(9));
+        removeRadioInputs(id.charAt(9));
         createCheckBoxInputCount(id);
     }
     else if (id.charAt(0) === 'i' && selected == 'Text Box') {
-        removeCheckRadioInputs(id.charAt(9));
+        removeRadioInputs(id.charAt(9));
+        removeCheckInputs(id.charAt(9));
         var element = document.getElementById('checkCoun' + id.charAt(9));
         if (element) {
             element.remove();
@@ -288,7 +291,7 @@ function createRadio(id, value) {
 
         }
     }
-
+    //block which will add one radio input label
     var newRadioInput = document.createElement('input');
     newRadioInput.type = "text";
     newRadioInput.id = "count" + row + " " + value;
@@ -297,6 +300,7 @@ function createRadio(id, value) {
     existingDiv.appendChild(newRadioInput);
 
 }
+//function which will create dropbox with options 
 function createRadioInputCount(id) {
 
     var row = id.charAt(9);
@@ -348,20 +352,20 @@ function createRadio(id, value) {
     console.log(row);
     //if user change it's mind and chose one input this block will remove all radio inputs and add one at the end of function
     if (value === '1') {
-        var element1 = document.getElementById('count' + row + " " + 1);
+        var element1 = document.getElementById('countRadio' + row + " " + 1);
         console.log(typeof (element));
         if (element1) {
 
             element1.remove()
 
         }
-        var element2 = document.getElementById('count' + row + " " + 2);
+        var element2 = document.getElementById('countRadio' + row + " " + 2);
         if (element2) {
 
             element2.remove();
 
         }
-        var element3 = document.getElementById('count' + row + " " + 3);
+        var element3 = document.getElementById('countRadio' + row + " " + 3);
         if (element3) {
 
             element3.remove();
@@ -369,14 +373,14 @@ function createRadio(id, value) {
     }
     //this block will remove  radios 2 and 3 an radio 2 will be added at the end of the function
     if (value === '2') {
-        var element2 = document.getElementById('count' + row + " " + 2);
+        var element2 = document.getElementById('countRadio' + row + " " + 2);
         console.log(element2);
         if (element2) {
 
             element2.remove();
 
         }
-        var element3 = document.getElementById('count' + row + " " + 3);
+        var element3 = document.getElementById('countRadio' + row + " " + 3);
         if (element3) {
 
             element3.remove();
@@ -390,8 +394,9 @@ function createRadio(id, value) {
         if (!element2) {
             var newRadioInput = document.createElement('input');
             newRadioInput.type = "text";
-            newRadioInput.id = "count" + row + " " + (value - 1);
+            newRadioInput.id = "countRadio" + row + " " + (value - 1);
             newRadioInput.placeholder = "Radio button " + (value - 1) + " label...";
+            newRadioInput.style.display = "block"
             var existingDiv = document.getElementById("row" + row);
             existingDiv.appendChild(newRadioInput);
         }
@@ -405,8 +410,9 @@ function createRadio(id, value) {
 
     var newRadioInput = document.createElement('input');
     newRadioInput.type = "text";
-    newRadioInput.id = "count" + row + " " + value;
+    newRadioInput.id = "countRadio" + row + " " + value;
     newRadioInput.placeholder = "Radio button " + value + " label...";
+    newRadioInput.style.display = "block"
     var existingDiv = document.getElementById("row" + row);
     existingDiv.appendChild(newRadioInput);
 
@@ -418,20 +424,20 @@ function createCheckBox(id, value) {
     console.log(row);
     //if user change it's mind and chose one input this block will remove all radio inputs and add one at the end of function
     if (value === '1') {
-        var element1 = document.getElementById('count' + row + " " + 1);
+        var element1 = document.getElementById('countCheck' + row + " " + 1);
         console.log(typeof (element));
         if (element1) {
 
             element1.remove()
 
         }
-        var element2 = document.getElementById('count' + row + " " + 2);
+        var element2 = document.getElementById('countCheck' + row + " " + 2);
         if (element2) {
 
             element2.remove();
 
         }
-        var element3 = document.getElementById('count' + row + " " + 3);
+        var element3 = document.getElementById('countCheck' + row + " " + 3);
         if (element3) {
 
             element3.remove();
@@ -439,14 +445,14 @@ function createCheckBox(id, value) {
     }
     //this block will remove  radios 2 and 3 an radio 2 will be added at the end of the function
     if (value === '2') {
-        var element2 = document.getElementById('count' + row + " " + 2);
+        var element2 = document.getElementById('countCheck' + row + " " + 2);
         console.log(element2);
         if (element2) {
 
             element2.remove();
 
         }
-        var element3 = document.getElementById('count' + row + " " + 3);
+        var element3 = document.getElementById('countCheck' + row + " " + 3);
         if (element3) {
 
             element3.remove();
@@ -456,14 +462,16 @@ function createCheckBox(id, value) {
     //if the user reselect option 3 this block will remove third radio and the same will be added at the end of function
     if (value === '3') {
         //if radio button 2 doesn't exist and count 3 is called it will add radio 2,and later at the end it will add radio 3 button
-        var element2 = document.getElementById('count' + row + " " + 2);
+        var element2 = document.getElementById('countCheck' + row + " " + 2);
         if (!element2) {
-            var newRadioInput = document.createElement('input');
-            newRadioInput.type = "text";
-            newRadioInput.id = "count" + row + " " + (value - 1);
-            newRadioInput.placeholder = "Check box " + (value - 1) + " label...";
+            var newCheckInput = document.createElement('input');
+            newCheckInput.type = "text";
+            newCheckInput.id = "countCheck" + row + " " + (value - 1);
+            newCheckInput.placeholder = "Check box " + (value - 1) + " label...";
+            newCheckInput.style.display = "block";
             var existingDiv = document.getElementById("row" + row);
-            existingDiv.appendChild(newRadioInput);
+
+            existingDiv.appendChild(newCheckInput);
         }
         var element3 = document.getElementById('count' + row + " " + 3);
         if (element3) {
@@ -475,29 +483,90 @@ function createCheckBox(id, value) {
 
     var newCheckInput = document.createElement('input');
     newCheckInput.type = "text";
-    newCheckInput.id = "count" + row + " " + value;
+    newCheckInput.id = "countCheck" + row + " " + value;
     newCheckInput.placeholder = "Check box " + value + " label...";
+    newCheckInput.style.display = "block";
     var existingDiv = document.getElementById("row" + row);
     existingDiv.appendChild(newCheckInput);
 
 }
-function removeCheckRadioInputs(row) {
-    var element1 = document.getElementById('count' + row + " " + 1);
+function removeRadioInputs(row) {
+    var element1 = document.getElementById('countRadio' + row + " " + 1);
     console.log(typeof (element));
     if (element1) {
 
         element1.remove()
 
     }
-    var element2 = document.getElementById('count' + row + " " + 2);
+    var element2 = document.getElementById('countRadio' + row + " " + 2);
     if (element2) {
 
         element2.remove();
 
     }
-    var element3 = document.getElementById('count' + row + " " + 3);
+    var element3 = document.getElementById('countRadio' + row + " " + 3);
     if (element3) {
 
         element3.remove();
+    }
+}
+function removeCheckInputs(row) {
+    var element1 = document.getElementById('countCheck' + row + " " + 1);
+    console.log(typeof (element));
+    if (element1) {
+
+        element1.remove()
+
+    }
+    var element2 = document.getElementById('countCheck' + row + " " + 2);
+    if (element2) {
+
+        element2.remove();
+
+    }
+    var element3 = document.getElementById('countCheck' + row + " " + 3);
+    if (element3) {
+
+        element3.remove();
+    }
+}
+
+function saveForm() {
+    var numberOdRows = rowsCount - 1;
+    var formName = document.getElementById('search');
+    for (var i = 0; i < numberOdRows; i++) {
+        var rowLabel = document.getElementById('inpt' + (i + 1));
+        var rowTextBox = document.getElementById('formDrop ' + (i + 1));
+        if(rowTextBox)
+        {
+        if (rowTextBox.nodeValue == "Text Box") {
+            rowTextBox = "text";
+        }
+        }
+        else {
+            rowTextBox = "";
+        }
+        var rowRadio1Label = document.getElementById('countRadio' + (i + 1) + " " + 1);
+        var rowRadio2Label = document.getElementById('countRadio' + (i + 1) + " " + 2);
+        var rowRadio3Label = document.getElementById('countRadio' + (i + 1) + " " + 3);
+        var rowCheck1Label = document.getElementById('countCheck' + (i + 1) + " " + 1);
+        var rowCheck2Label = document.getElementById('countCheck' + (i + 1) + " " + 2);
+        var rowCheck3Label = document.getElementById('countCheck' + (i + 1) + " " + 3);
+        var inputType = document.getElementById('typeDrop ' + (i + 1));
+        var formRow = new rowFormularTemplate(rowLabel.value, rowTextBox, rowRadio1Label.value, rowRadio2Label.value, rowRadio3Label.value, rowCheck1Label.value, rowCheck2Label.value, rowCheck3Label.value, inputType.value);
+        if (checkSupportDB) {
+         
+            var openRequest = window.indexedDB.open('testFormular', 1);
+           
+                const db = openRequest.result;
+                const transaction = db.transaction(['Formular'], 'readwrite').objectStore('Formular').add({formtitle:formName,row:formRow});
+                openRequest.onsuccess = () => {
+                    console.log("Uspješno dodano!!!!!!!")
+
+            }
+            openRequest.onerror=()=>{
+                console.log("Sranjeeeee")
+            }
+        }
     }
 }
