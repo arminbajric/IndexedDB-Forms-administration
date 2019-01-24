@@ -24,83 +24,45 @@ function openTab(evt, tabName) {
 function init() {
     //prikazivanje administrator taba tokom učitavanja stranice
     document.getElementById("Administrator").style.display = "block";
-    //provjera da li browser podržava indexedDb
-    if (checkSupportDB()) {
-
-        var openRequest = indexedDB.open("testFormular", 1);
-        //kreiranje baze ako već ne postoji
-        openRequest.onupgradeneeded = function (e) {
-            var thisDB = e.target.result;
-
-            if (!thisDB.objectStoreNames.contains('Formular', { key: "formTitle" })) {
-                thisDB.createObjectStore('Formular', { key: "formTitle" });
-            }
 
 
-        }
-        //u slučaju greške ispis poruke
-        openRequest.onerror = function (e) {
-            console.log("Error!!!!");
-        }
-        //ukoliko je sve uspješno odrađeno ispis poruke Success
-        openRequest.onsuccess = function () {
-            console.log("Success!!");
-        }
-        console.log(openRequest);
-    }
 }
-//funkcija koja provjera da li browser podržava IndexedDB
-function checkSupportDB() {
-    if (typeof window.indexedDB != 'undefined') {
 
 
-        return true;
-    }
-    return false;
-}
 //metoda koja pretražuje  već snimljenje formulare u bazi
 function searchForFormular(value) {
-    //dohvatanje vrijednosti upisane u pretragu
-    var search = document.getElementById("search");
-    //provjera da li browser podržava indexedDB
-    if (checkSupportDB) {
-        //otvaranje baze
-        var openRequest = window.indexedDB.open('testFormular', 1);
-        //ukoliko je uspješno otvorena baza izvršava se naredna metoda koja pretražuje bazu i upoređuje zapise sa traženim 
-        openRequest.onsuccess = () => {
-            //dohvatanje zapisa iz baze
-            const db = openRequest.result;
-            const transaction = db.transaction(['Formular'], 'readonly');
-            //dohvatanje željenog objekta 
-            const getStore = transaction.objectStore('Formular');
-            //postavljanje kursora za pretragu baze
-            const getCursorRequest = getStore.openCursor();
-            //u slučaju da je kursor uspješno postavljen  kreće pretraživanje baze
-            getCursorRequest.onsuccess = e => {
-                const cursor = e.target.result;
-                cursor
-
-                //poređenje kursora i vrijednosti iz unosa
-                if (cursor === search.value) {
-                    console.log(cursor.value);
-                    //pomjeranje kursora i ponovno provjeravanje podudaranja
-                    cursor.continue();
-                } else {
-                    createNewRowForm();
-                    var node = document.getElementById("saveButton");
-
-                    var saveButton = document.createElement('button');
-                    saveButton.onclick = "saveForm()";
-                    saveButton.value = "Save";
-                    saveButton.textContent = "Save";
-                    saveButton.id = "saveForm";
-                    saveButton.className = "saveButton";
-                    node.append(saveButton);
-                    document.getElementById('saveForm').setAttribute("onclick", 'saveForm()');
-                }
-            }
-        }
+    //block which will reset form block for new search
+    var node = document.getElementById('form block');
+    node.innerHTML = "";
+    var save = document.getElementById("saveButton");
+    if (save) {
+        save.innerHTML = "";
     }
+    rowsCount = 1;
+    //block will check if wanted formular is in store
+    var search = document.getElementById("search");
+    if (forms.has(document.getElementById('search').value)) {
+        console.log('formfounded');
+        showFoundedFormular(forms.get(document.getElementById('search').value));
+    }
+
+   
+
+
+    else {
+        createNewRowForm();
+        var node = document.getElementById("saveButton");
+
+        var saveButton = document.createElement('button');
+        saveButton.onclick = "saveForm()";
+        saveButton.value = "Save";
+        saveButton.textContent = "Save";
+        saveButton.id = "saveForm";
+        saveButton.className = "saveButton";
+        node.append(saveButton);
+        document.getElementById('saveForm').setAttribute("onclick", 'saveForm()');
+    }
+
 }
 var newAdd = document.createElement('input');
 newAdd.type = "button";
@@ -530,43 +492,52 @@ function removeCheckInputs(row) {
         element3.remove();
     }
 }
-
+var forms = new Map();
 function saveForm() {
     var numberOdRows = rowsCount - 1;
     var formName = document.getElementById('search');
-    for (var i = 0; i < numberOdRows; i++) {
-        var rowLabel = document.getElementById('inpt' + (i + 1));
-        var rowTextBox = document.getElementById('formDrop ' + (i + 1));
-        if(rowTextBox)
-        {
-        if (rowTextBox.nodeValue == "Text Box") {
-            rowTextBox = "text";
-        }
-        }
-        else {
-            rowTextBox = "";
-        }
-        var rowRadio1Label = document.getElementById('countRadio' + (i + 1) + " " + 1);
-        var rowRadio2Label = document.getElementById('countRadio' + (i + 1) + " " + 2);
-        var rowRadio3Label = document.getElementById('countRadio' + (i + 1) + " " + 3);
-        var rowCheck1Label = document.getElementById('countCheck' + (i + 1) + " " + 1);
-        var rowCheck2Label = document.getElementById('countCheck' + (i + 1) + " " + 2);
-        var rowCheck3Label = document.getElementById('countCheck' + (i + 1) + " " + 3);
-        var inputType = document.getElementById('typeDrop ' + (i + 1));
-        var formRow = new rowFormularTemplate(rowLabel.value, rowTextBox, rowRadio1Label.value, rowRadio2Label.value, rowRadio3Label.value, rowCheck1Label.value, rowCheck2Label.value, rowCheck3Label.value, inputType.value);
-        if (checkSupportDB) {
-         
-            var openRequest = window.indexedDB.open('testFormular', 1);
-           
-                const db = openRequest.result;
-                const transaction = db.transaction(['Formular'], 'readwrite').objectStore('Formular').add({formtitle:formName,row:formRow});
-                openRequest.onsuccess = () => {
-                    console.log("Uspješno dodano!!!!!!!")
+    if (formName) {
+        var Name = formName.value;
+        var form = [];
+        for (var i = 0; i < numberOdRows; i++) {
+            var rowLabel = document.getElementById('inpt' + (i + 1));
+            var rowTypeDrop = document.getElementById('inputType' + (i + 1));
 
-            }
-            openRequest.onerror=()=>{
-                console.log("Sranjeeeee")
-            }
+            var rowRadio1Label = document.getElementById('countRadio' + (i + 1) + " " + 1);
+
+            var rowRadio2Label = document.getElementById('countRadio' + (i + 1) + " " + 2);
+
+            var rowRadio3Label = document.getElementById('countRadio' + (i + 1) + " " + 3);
+
+            var rowCheck1Label = document.getElementById('countCheck' + (i + 1) + " " + 1);
+
+            var rowCheck2Label = document.getElementById('countCheck' + (i + 1) + " " + 2);
+
+            var rowCheck3Label = document.getElementById('countCheck' + (i + 1) + " " + 3);
+            var rowRadioDrop = document.getElementById('radioCoun' + (i + 1));
+            var rowCheckDrop = document.getElementById('radioCoun' + (i + 1));
+            var inputType = document.getElementById('typeDrop ' + (i + 1));
+
+
+            var formRow = {
+                Label: rowLabel,
+                rowType: rowTypeDrop,
+                rowRadioCunt: rowRadioDrop,
+                rowRadioLabel1: rowRadio1Label,
+                rowRadioLAbel2: rowRadio2Label,
+                rowRadioLabel3: rowRadio3Label,
+                rowCheckCount: rowCheckDrop,
+                rowCheckLabel1: rowCheck1Label,
+                rowCheckLabel2: rowCheck2Label,
+                rowCheckLabel3: rowCheck3Label,
+                type: inputType
+            };
+
+            form.push(formRow);
+
+
         }
+        forms.set(Name, form);
+        console.log(forms);
     }
 }
