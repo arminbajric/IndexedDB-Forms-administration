@@ -1,6 +1,7 @@
 function showFoundedFormular(form) {
 
    console.log(form.length);
+   //loop which will create  all rows stored 
    for (var i = 0; i < form.length; i++) {
       var node = document.getElementById('form block');
       var newDivRow = document.createElement('div');
@@ -17,7 +18,7 @@ function showFoundedFormular(form) {
       newDivRow.appendChild(newInput);
       var typeDrop = form[i].rowType;
       newDivRow.append(typeDrop);
-      //chcking stored elements and applying them to row if they exist with stored values and atributes
+      //checking stored elements and applying them to row if they exist with stored values and atributes
       var rowRadioCount = form[i].rowRadioCunt;
       if (rowRadioCount) {
          newDivRow.appendChild(rowRadioCount);
@@ -65,5 +66,7 @@ function showFoundedFormular(form) {
       }
       //adding newly created div row to its parent div
       node.appendChild(newDivRow);
+      rowsCount++;
    }
+rowsCount-=1;
 }

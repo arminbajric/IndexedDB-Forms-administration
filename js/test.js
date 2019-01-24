@@ -40,11 +40,12 @@ function searchForFormular(value) {
     if (save) {
         save.innerHTML = "";
     }
-    rowsCount = 1;
+    
     //block will check if wanted formular is in store
     var search = document.getElementById("search");
     if (forms.has(document.getElementById('search').value)) {
         console.log('formfounded');
+        rowsCount=forms.get(document.getElementById('search').value).length+1;
         //calling function to show stored formular template
         showFoundedFormular(forms.get(document.getElementById('search').value));
         //adding save button to enable formular editing
@@ -64,6 +65,7 @@ function searchForFormular(value) {
 
 
     else {
+        rowsCount = 1;
         //this block will be activated if wanted formular is not found and it will add first row of new formular which will be saved as search query
         //creating first row
         createNewRowForm();
@@ -513,6 +515,7 @@ function removeCheckInputs(row) {
 }
 var forms = new Map();
 function saveForm() {
+    console.log(rowsCount);
     var numberOdRows = rowsCount - 1;
     var formName = document.getElementById('search');
     if (formName) {
@@ -555,10 +558,14 @@ function saveForm() {
                 add: addButton
             };
 
-
+            
             form.push(formRow);
 
 
+        }
+        if(forms.has(Name))
+        {
+         forms.delete(Name);
         }
         forms.set(Name, form);
         console.log(forms);
