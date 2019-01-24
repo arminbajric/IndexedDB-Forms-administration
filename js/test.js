@@ -9,7 +9,7 @@ function openTab(evt, tabName) {
     for (i = 0; i < tabcontent.length; i++) {
         tabcontent[i].style.display = "none";
     }
-
+updateFormular();
     // deactivating tabs
     tablinks = document.getElementsByClassName("tablinks");
     for (i = 0; i < tablinks.length; i++) {
@@ -24,10 +24,26 @@ function openTab(evt, tabName) {
 function init() {
     //prikazivanje administrator taba tokom učitavanja stranice
     document.getElementById("Administrator").style.display = "block";
-
+   updateFormular();
 
 }
-
+function updateFormular(){
+    var node=document.getElementById('formList');
+    node.innerHTML="";
+    var defaultOption=document.createElement('option');
+    defaultOption.textContent="Select formular";
+    node.appendChild(defaultOption);
+    var keys=forms.keys();
+    for(var i=0;i<forms.size;i++)
+    {
+        var newOption=document.createElement('option');
+        
+        newOption.text=keys.next().value;
+        newOption.id='option'+(i+1);
+        node.appendChild(newOption);
+        document.getElementById('formList').setAttribute("onchange",'loadTemplate()')
+    }
+}
 
 //function which will search for wanted formular template and will offer creating new template if wanted is not founded
 function searchForFormular(value) {
@@ -42,7 +58,7 @@ function searchForFormular(value) {
     }
     
     //block will check if wanted formular is in store
-    var search = document.getElementById("search");
+ 
     if (forms.has(document.getElementById('search').value)) {
         console.log('formfounded');
         rowsCount=forms.get(document.getElementById('search').value).length+1;
@@ -380,6 +396,8 @@ function createRadio(id, value) {
             newRadioInput.id = "countRadio" + row + " " + (value - 1);
             newRadioInput.placeholder = "Radio button " + (value - 1) + " label...";
             newRadioInput.style.display = "block"
+            newRadioInput.style.marginLeft="250px";
+            newRadioInput.style.marginTop="15px";
             var existingDiv = document.getElementById("row" + row);
             existingDiv.appendChild(newRadioInput);
         }
@@ -395,7 +413,9 @@ function createRadio(id, value) {
     newRadioInput.type = "text";
     newRadioInput.id = "countRadio" + row + " " + value;
     newRadioInput.placeholder = "Radio button " + value + " label...";
-    newRadioInput.style.display = "block"
+    newRadioInput.style.display = "block";
+    newRadioInput.style.marginLeft="250px";
+    newRadioInput.style.marginTop="15px";
     var existingDiv = document.getElementById("row" + row);
     existingDiv.appendChild(newRadioInput);
 
@@ -452,6 +472,8 @@ function createCheckBox(id, value) {
             newCheckInput.id = "countCheck" + row + " " + (value - 1);
             newCheckInput.placeholder = "Check box " + (value - 1) + " label...";
             newCheckInput.style.display = "block";
+            newCheckInput.style.marginLeft="250px";
+            newCheckInput.style.marginTop="15px";
             var existingDiv = document.getElementById("row" + row);
 
             existingDiv.appendChild(newCheckInput);
@@ -469,6 +491,8 @@ function createCheckBox(id, value) {
     newCheckInput.id = "countCheck" + row + " " + value;
     newCheckInput.placeholder = "Check box " + value + " label...";
     newCheckInput.style.display = "block";
+    newCheckInput.style.marginLeft="250px";
+    newCheckInput.style.marginTop="15px";
     var existingDiv = document.getElementById("row" + row);
     existingDiv.appendChild(newCheckInput);
 

@@ -15,7 +15,7 @@
     <div class="container">
         <div class="tab">
             <button class="tablinks" onclick="openTab(event, 'Administrator')">Administrator</button>
-            <button class="tablinks" onclick="openTab(event, 'Formular')">Formular</button>
+            <button class="tablinks" onclick="openTab(event, 'Formular');updateFormular();">Formular</button>
         </div>
         <div id="Administrator" class="tabcontent">
             <h3>Administrator</h3>
@@ -38,6 +38,8 @@
                
            </div>
            <hr>
+           <div id="formularContent"></div>
+           <div id="saveButtonContent"></div>
         </div>
     </div>
 </body>
