@@ -4,23 +4,23 @@ function openTab(evt, tabName) {
 
     var i, tabcontent, tablinks;
     console.log('clicked');
-    //skrivanje svih blokova koji imaju klasu tabcontent
+    //hiding all block with class tabcontent
     tabcontent = document.getElementsByClassName("tabcontent");
     for (i = 0; i < tabcontent.length; i++) {
         tabcontent[i].style.display = "none";
     }
 
-    // deaktiviranje tabova
+    // deactivating tabs
     tablinks = document.getElementsByClassName("tablinks");
     for (i = 0; i < tablinks.length; i++) {
         tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
 
-    //prikazivanje odabranog taba i aktiviranje odabranog taba
+    //activate and show selected tab
     document.getElementById(tabName).style.display = "block";
     evt.currentTarget.className += " active";
 }
-//funkcija koja se izvršava pri učitavanju stranice te prikazuje Administrator tab te inicira bazu u koju će se smještati podaci
+//function which loads on page loading event and activates administrator tab
 function init() {
     //prikazivanje administrator taba tokom učitavanja stranice
     document.getElementById("Administrator").style.display = "block";
@@ -29,11 +29,13 @@ function init() {
 }
 
 
-//metoda koja pretražuje  već snimljenje formulare u bazi
+//function which will search for wanted formular template and will offer creating new template if wanted is not founded
 function searchForFormular(value) {
     //block which will reset form block for new search
     var node = document.getElementById('form block');
-    node.innerHTML = "";
+    if (node) {
+        node.innerHTML = "";
+    }
     var save = document.getElementById("saveButton");
     if (save) {
         save.innerHTML = "";
@@ -43,32 +45,49 @@ function searchForFormular(value) {
     var search = document.getElementById("search");
     if (forms.has(document.getElementById('search').value)) {
         console.log('formfounded');
+        //calling function to show stored formular template
         showFoundedFormular(forms.get(document.getElementById('search').value));
-    }
-
-   
-
-
-    else {
-        createNewRowForm();
+        //adding save button to enable formular editing
         var node = document.getElementById("saveButton");
 
         var saveButton = document.createElement('button');
-        saveButton.onclick = "saveForm()";
         saveButton.value = "Save";
         saveButton.textContent = "Save";
         saveButton.id = "saveForm";
         saveButton.className = "saveButton";
         node.append(saveButton);
         document.getElementById('saveForm').setAttribute("onclick", 'saveForm()');
+
+    }
+
+
+
+
+    else {
+        //this block will be activated if wanted formular is not found and it will add first row of new formular which will be saved as search query
+        //creating first row
+        createNewRowForm();
+        //displaying and setting save button for new form
+        var node = document.getElementById("saveButton");
+
+        var saveButton = document.createElement('button');
+
+        saveButton.value = "Save";
+        saveButton.textContent = "Save";
+        saveButton.id = "saveForm";
+        saveButton.className = "saveButton";
+        node.append(saveButton);
+        document.getElementById('saveForm').setAttribute("onclick", 'saveForm()');
+        //displaying and setting Add button which adds new row in form
+        var newAdd = document.createElement('input');
+        newAdd.type = "button";
+        newAdd.textContent = "Add new";
+        newAdd.id = "Add" + rowsCount;
+        newAdd.onclick = "createNewRowForm()";
     }
 
 }
-var newAdd = document.createElement('input');
-newAdd.type = "button";
-newAdd.textContent = "Add new";
-newAdd.id = "Add" + rowsCount;
-newAdd.onclick = "createNewRowForm()";
+
 
 
 
@@ -517,21 +536,25 @@ function saveForm() {
             var rowRadioDrop = document.getElementById('radioCoun' + (i + 1));
             var rowCheckDrop = document.getElementById('radioCoun' + (i + 1));
             var inputType = document.getElementById('typeDrop ' + (i + 1));
-
-
+            var addButton = "";
+            if (i == (numberOdRows - 1)) {
+                addButton = document.getElementById('Add' + (i + 1));
+            }
             var formRow = {
                 Label: rowLabel,
                 rowType: rowTypeDrop,
                 rowRadioCunt: rowRadioDrop,
                 rowRadioLabel1: rowRadio1Label,
-                rowRadioLAbel2: rowRadio2Label,
+                rowRadioLabel2: rowRadio2Label,
                 rowRadioLabel3: rowRadio3Label,
                 rowCheckCount: rowCheckDrop,
                 rowCheckLabel1: rowCheck1Label,
                 rowCheckLabel2: rowCheck2Label,
                 rowCheckLabel3: rowCheck3Label,
-                type: inputType
+                type: inputType,
+                add: addButton
             };
+
 
             form.push(formRow);
 
