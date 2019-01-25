@@ -22,28 +22,12 @@ updateFormular();
 }
 //function which loads on page loading event and activates administrator tab
 function init() {
-    //prikazivanje administrator taba tokom učitavanja stranice
+    //shows Administrator tab on load 
     document.getElementById("Administrator").style.display = "block";
    updateFormular();
 
 }
-function updateFormular(){
-    var node=document.getElementById('formList');
-    node.innerHTML="";
-    var defaultOption=document.createElement('option');
-    defaultOption.textContent="Select formular";
-    node.appendChild(defaultOption);
-    var keys=forms.keys();
-    for(var i=0;i<forms.size;i++)
-    {
-        var newOption=document.createElement('option');
-        
-        newOption.text=keys.next().value;
-        newOption.id='option'+(i+1);
-        node.appendChild(newOption);
-        document.getElementById('formList').setAttribute("onchange",'loadTemplate()')
-    }
-}
+
 
 //function which will search for wanted formular template and will offer creating new template if wanted is not founded
 function searchForFormular(value) {
@@ -57,7 +41,7 @@ function searchForFormular(value) {
         save.innerHTML = "";
     }
     
-    //block will check if wanted formular is in store
+    //block will check if wanted formular is in store and will call to load template if it does
  
     if (forms.has(document.getElementById('search').value)) {
         console.log('formfounded');
@@ -141,14 +125,14 @@ function createNewRowForm() {
     newInput.className = "leftMarginForm";
     //adding created text input to div element
     newDiv.appendChild(newInput);
-    //kreiranje dropdown liste
+    //creating dropdown list with input type options
     var newInputDrop = document.createElement('select');
     newInputDrop.id = "inputType" + rowsCount;
     newInputDrop.className = "leftMarginForm";
     var option1 = document.createElement('option');
-    //kreiranje opcija liste
+    
     option1.text = "Text Box";
-    //dodavanje opcija listi
+   
     newInputDrop.add(option1);
     var option2 = document.createElement("option");
     option2.text = "Check Box";
@@ -160,14 +144,14 @@ function createNewRowForm() {
 
     newInputDrop.add(option3);
     newInputDrop.className = "formDrop " + rowsCount;
-    //dodavanje liste prethodno kreiranom div elementu
+    //adding dropdown to its parent
     newDiv.appendChild(newInputDrop);
     var newTypeDrop = document.createElement('select');
     newTypeDrop.id = "type" + rowsCount;
     var opt1 = document.createElement('option');
-    //kreiranje opcija liste
+    //creating options for input restrictions
     opt1.text = "None";
-    //dodavanje opcija listi
+    
     newTypeDrop.add(opt1);
     var opt2 = document.createElement("option");
     opt2.text = "Mandatory";
@@ -196,7 +180,7 @@ function createNewRowForm() {
 }
 
 
-
+//function will add dropdowns for radio an checkbox quantity options and will remove all elements which are not needed
 function createAdditions(id, selected) {
     console.log(id + selected);
     var row = id.charAt(9);
@@ -322,6 +306,7 @@ function createRadioInputCount(id) {
 
     createRadio(id, 1);
 }
+//function will add droplist for checkbox input quantity
 function createCheckBoxInputCount(id) {
 
     var row = id.charAt(9);
@@ -344,6 +329,7 @@ function createCheckBoxInputCount(id) {
 
     createCheckBox(id, 1);
 }
+//function will add text input for radio button label on call
 function createRadio(id, value) {
 
     //this will return the row where radio count is called
@@ -497,6 +483,7 @@ function createCheckBox(id, value) {
     existingDiv.appendChild(newCheckInput);
 
 }
+//function will remove all radio buttons if input type is changed
 function removeRadioInputs(row) {
     var element1 = document.getElementById('countRadio' + row + " " + 1);
     console.log(typeof (element));
@@ -517,6 +504,7 @@ function removeRadioInputs(row) {
         element3.remove();
     }
 }
+//function will remove all checkbox inputs if input type is changed
 function removeCheckInputs(row) {
     var element1 = document.getElementById('countCheck' + row + " " + 1);
     console.log(typeof (element));
@@ -538,6 +526,7 @@ function removeCheckInputs(row) {
     }
 }
 var forms = new Map();
+//function will save form template saving its html elements
 function saveForm() {
     console.log(rowsCount);
     var numberOdRows = rowsCount - 1;
@@ -545,6 +534,7 @@ function saveForm() {
     if (formName) {
         var Name = formName.value;
         var form = [];
+        //loop will add every row to its object
         for (var i = 0; i < numberOdRows; i++) {
             var rowLabel = document.getElementById('inpt' + (i + 1));
             var rowTypeDrop = document.getElementById('inputType' + (i + 1));
@@ -582,11 +572,13 @@ function saveForm() {
                 add: addButton
             };
 
-            
+            //each row will bea added to its form array
             form.push(formRow);
 
 
         }
+        //each completed form data will be added to Map and the key will be form template name
+        //if there is a record about form,form is being updated,selection will delete old data about form and new one will be added
         if(forms.has(Name))
         {
          forms.delete(Name);
