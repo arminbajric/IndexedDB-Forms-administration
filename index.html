@@ -4,48 +4,59 @@
 <head>
     <meta charset="utf-8">
     <title>DCCS test</title>
-    
-    
+
+
     <link rel="stylesheet" href="css/style.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
 </head>
 
 <body onload="init()">
-    <div class="container">
+    <div id="mainContainer" class="container">
         <div class="tab">
+            <!-- tabs block whic will be used to switch between tabs-->
             <button class="tablinks" onclick="openTab(event, 'Administrator')">Administrator</button>
             <button class="tablinks" onclick="openTab(event, 'Formular');updateFormular();">Formular</button>
         </div>
+        <!--Administrator tab content
+        All elements except search elements will be added dinamicly on user provided event-->
         <div id="Administrator" class="tabcontent">
             <h3>Administrator</h3>
+            <!--block which will list formulars if they are available and offer user to create new ones-->
             <div class="searchBlock">
                 <label class="item">Search</label><input class="item" id="search" type="text" placeholder="Search...."><input
                     class="item" type="button" onclick="searchForFormular();" value="Search">
-                
+
             </div>
             <hr>
+            <!--in form block all users actions will be displayed-->
             <div id="form block"></div>
+            <!--button for saving new formulars templates and updating existing-->
             <div id="saveButton"></div>
         </div>
-
+<!--in formular tab user can edit data for existing formular templates and insert dana for newly created ones-->
         <div id="Formular" class="tabcontent">
             <h3>Formular</h3>
-           <div id="formularList">
-               <label>Select one of listed formulars: </label>
-               <select class="leftMarginForm" id="formList" ><option>Select bellow</option></select>
-              
-               
-           </div>
-           <hr>
-           <div id="formularContent"></div>
-           <div id="saveButtonContent"></div>
+            <!--in formular list will be added all stored formular templates,this list will be refreshed when user switch to formular tab-->
+            <div id="formularList">
+                <label>Select one of listed formulars: </label>
+                <select class="leftMarginForm" id="formList">
+                    <option>Select bellow</option>
+                </select>
+
+
+            </div>
+            <hr>
+            <!--in formular content on select will be diyplayed selected template,user can insert or edit existing data-->
+            <div id="formularContent"></div>
+            <div id="saveButtonContent"></div>
         </div>
     </div>
 </body>
 
 </html>
-
+<!--all scripts are imported here-->
 <script src="js/overallFunctionality.js"></script>
 <script src="js/administratorFormularFunctionality.js"></script>
 <script src="js/formularFunctionality.js"></script>
+<script src="js/db.js"></script>
