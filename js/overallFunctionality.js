@@ -55,10 +55,14 @@ function searchForFormular() {
     }
 
     //block will check if wanted formular is in store and will call to load template if it does
-    var htmlData = searchforTemplate(document.getElementById('search').value);
-    console.log(htmlData);
-    if (htmlData) {
-        showFoundedTemplate(htmlData);
+   
+    var data = searchforTemplate(document.getElementById('search').value);
+    
+   
+    if (data) {
+        //if template is founded it will be passed to function to display it
+      
+        //save button will be added for template editing
         var node = document.getElementById("saveButton");
 
         var saveButton = document.createElement('button');
@@ -98,6 +102,7 @@ function searchForFormular() {
         newAdd.id = "Add" + rowsCount;
         newAdd.onclick = "createNewRowForm()";
     }
+    
 
 }
 
@@ -202,7 +207,7 @@ function createNewRowForm() {
     newAdd.value = "Add new";
     newAdd.className = "leftMarginForm";
     newAdd.id = "Add" + rowsCount;
-    newAdd.setAttribute("onclick", "createAdditions(this.id,this.value);");
+    newAdd.setAttribute("onclick", "createNewRowForm();");
     newDiv.append(newAdd);
 
     //kreiranje i dodavanje horizontalne linije
@@ -302,16 +307,16 @@ function createRadioInputCount(id) {
     newRadioCountInput.id = "radioCoun" + row;
     var option1 = document.createElement('option');
     option1.text = "1"
-    option1.id="quantityRadio"+row+""+"1";
-    option1.selected=true;
+    option1.id = "quantityRadio" + row + "" + "1";
+    option1.selected = true;
     newRadioCountInput.add(option1);
     var option2 = document.createElement('option');
     option2.text = "2"
-    option2.id="quantityRadio"+row+""+"2";
+    option2.id = "quantityRadio" + row + "" + "2";
     newRadioCountInput.add(option2);
     var option3 = document.createElement('option');
     option3.text = "3"
-    option3.id="quantityRadio"+row+""+"3";
+    option3.id = "quantityRadio" + row + "" + "3";
     newRadioCountInput.add(option3);
     newRadioCountInput.className = "leftMarginForm";
     var typeDrop = document.getElementById('row' + row)
@@ -329,17 +334,17 @@ function createCheckBoxInputCount(id) {
     newCheckCountInput.id = "checkCoun" + row;
     var option1 = document.createElement('option');
     option1.text = "1"
-    option1.selected=true;
-    option1.selected="true";
-    option1.id="quantityCheck"+row+""+"1";
+    option1.selected = true;
+    option1.selected = "true";
+    option1.id = "quantityCheck" + row + "" + "1";
     newCheckCountInput.add(option1);
     var option2 = document.createElement('option');
     option2.text = "2";
-    option2.id="quantityCheck"+row+""+"2";
+    option2.id = "quantityCheck" + row + "" + "2";
     newCheckCountInput.add(option2);
     var option3 = document.createElement('option');
     option3.text = "3"
-    option3.id="quantityCheck"+row+""+"3";
+    option3.id = "quantityCheck" + row + "" + "3";
     newCheckCountInput.add(option3);
     newCheckCountInput.className = "leftMarginForm";
     var typeDrop = document.getElementById('row' + row)
@@ -356,9 +361,9 @@ function createRadio(id, value) {
     console.log(row);
     //if user change it's mind and chose one input this block will remove all radio inputs and add one at the end of function
     if (value === '1') {
-        document.getElementById('quantityRadio'+row+""+"1").setAttribute("selected",true);
-        document.getElementById('quantityRadio'+row+""+"2").removeAttribute('selected');
-        document.getElementById('quantityRadio'+row+""+"3").removeAttribute('selected');
+        document.getElementById('quantityRadio' + row + "" + "1").setAttribute("selected", true);
+        document.getElementById('quantityRadio' + row + "" + "2").removeAttribute('selected');
+        document.getElementById('quantityRadio' + row + "" + "3").removeAttribute('selected');
         var element1 = document.getElementById('countRadio' + row + " " + 1);
         console.log(typeof (element));
         if (element1) {
@@ -380,9 +385,9 @@ function createRadio(id, value) {
     }
     //this block will remove  radios 2 and 3 an radio 2 will be added at the end of the function
     if (value === '2') {
-        document.getElementById('quantityRadio'+row+""+"1").removeAttribute('selected');
-        document.getElementById('quantityRadio'+row+""+"2").setAttribute("selected",true);
-        document.getElementById('quantityRadio'+row+""+"3").removeAttribute('selected');
+        document.getElementById('quantityRadio' + row + "" + "1").removeAttribute('selected');
+        document.getElementById('quantityRadio' + row + "" + "2").setAttribute("selected", true);
+        document.getElementById('quantityRadio' + row + "" + "3").removeAttribute('selected');
         var element2 = document.getElementById('countRadio' + row + " " + 2);
         console.log(element2);
         if (element2) {
@@ -399,11 +404,11 @@ function createRadio(id, value) {
     }
     //if the user reselects option 3 this block will remove third radio and the same will be added at the end of function
     if (value === '3') {
-        document.getElementById('quantityRadio'+row+""+"1").removeAttribute('selected');
-        document.getElementById('quantityRadio'+row+""+"3").setAttribute("selected",true);
-        document.getElementById('quantityRadio'+row+""+"2").removeAttribute('selected');
+        document.getElementById('quantityRadio' + row + "" + "1").removeAttribute('selected');
+        document.getElementById('quantityRadio' + row + "" + "3").setAttribute("selected", true);
+        document.getElementById('quantityRadio' + row + "" + "2").removeAttribute('selected');
         //if radio button 2 doesn't exist and count 3 is called it will add radio 2,and later at the end it will add radio 3 button
-        var element2 = document.getElementById('count' + row + " " + 2);
+        var element2 = document.getElementById('countRadio' + row + " " + "2");
         if (!element2) {
             var newRadioInput = document.createElement('input');
             newRadioInput.type = "text";
@@ -441,9 +446,9 @@ function createCheckBox(id, value) {
     console.log(row);
     //if user change it's mind and chose one input this block will remove all radio inputs and add one at the end of function
     if (value === '1') {
-        document.getElementById('quantityCheck'+row+""+"2").removeAttribute('selected');
-        document.getElementById('quantityCheck'+row+""+"1").setAttribute("selected",true);
-        document.getElementById('quantityCheck'+row+""+"3").removeAttribute('selected');
+        document.getElementById('quantityCheck' + row + "" + "2").removeAttribute('selected');
+        document.getElementById('quantityCheck' + row + "" + "1").setAttribute("selected", true);
+        document.getElementById('quantityCheck' + row + "" + "3").removeAttribute('selected');
         var element1 = document.getElementById('countCheck' + row + " " + 1);
         console.log(typeof (element));
         if (element1) {
@@ -465,9 +470,9 @@ function createCheckBox(id, value) {
     }
     //this block will remove  radios 2 and 3 an radio 2 will be added at the end of the function
     if (value === '2') {
-        document.getElementById('quantityCheck'+row+""+"1").removeAttribute('selected');
-        document.getElementById('quantityCheck'+row+""+"2").setAttribute("selected",true);
-        document.getElementById('quantityCheck'+row+""+"3").removeAttribute('selected');
+        document.getElementById('quantityCheck' + row + "" + "1").removeAttribute('selected');
+        document.getElementById('quantityCheck' + row + "" + "2").setAttribute("selected", true);
+        document.getElementById('quantityCheck' + row + "" + "3").removeAttribute('selected');
         var element2 = document.getElementById('countCheck' + row + " " + 2);
         console.log(element2);
         if (element2) {
@@ -484,9 +489,9 @@ function createCheckBox(id, value) {
     }
     //if the user reselect option 3 this block will remove third radio and the same will be added at the end of function
     if (value === '3') {
-        document.getElementById('quantityCheck'+row+""+"2").removeAttribute('selected');
-        document.getElementById('quantityCheck'+row+""+"3").setAttribute("selected",true);
-        document.getElementById('quantityCheck'+row+""+"1").removeAttribute('selected');
+        document.getElementById('quantityCheck' + row + "" + "2").removeAttribute('selected');
+        document.getElementById('quantityCheck' + row + "" + "3").setAttribute("selected", true);
+        document.getElementById('quantityCheck' + row + "" + "1").removeAttribute('selected');
         //if radio button 2 doesn't exist and count 3 is called it will add radio 2,and later at the end it will add radio 3 button
         var element2 = document.getElementById('countCheck' + row + " " + 2);
         if (!element2) {
@@ -563,7 +568,7 @@ function removeCheckInputs(row) {
     }
 }
 var forms = new Map();
-//function will save form template saving its html elements
+//function will save form template saving form code
 function saveForm() {
     console.log(rowsCount);
     var test;
@@ -572,7 +577,8 @@ function saveForm() {
     if (formName) {
         var Name = formName.value;
         var form = [];
-        //loop will add every row to its object
+        //loop will update html code an prepare it for save to database
+        //html elemets properties will be added and updated
         for (var i = 0; i < numberOdRows; i++) {
             if (document.getElementById('inpt' + (i + 1))) {
                 document.getElementById('inpt' + (i + 1)).defaultValue = document.getElementById('inpt' + (i + 1)).value;
@@ -593,7 +599,7 @@ function saveForm() {
                 document.getElementById('countRadio' + (i + 1) + " 2").defaultValue = document.getElementById('countRadio' + (i + 1) + " 2").value;
             }
             if (document.getElementById('countRadio' + (i + 1) + " 3")) {
-                console.log('noooooooooooooooooooooooo')
+               
                 document.getElementById('countRadio' + (i + 1) + " 3").defaultValue = document.getElementById('countRadio' + (i + 1) + " 3").value;
             }
             if (document.getElementById('radioCoun' + (i + 1))) {
@@ -610,15 +616,12 @@ function saveForm() {
             }
         }
 
-        //each completed form data will be added to Map and the key will be form template name
-        //if there is a record about form,form is being updated,selection will delete old data about form and new one will be added
-        if (forms.has(Name)) {
-            forms.delete(Name);
-        }
-        forms.set(Name, form);
-        console.log(forms);
+       //after html code is updated and adjusted it will be stored to variable
+      
         var node = document.getElementById('form block').innerHTML;
         console.log(node);
-        addTemplateToDB(node, Name, "formsTemplate");
+        //here function will be called to store new or updated template,along with template code function will get template name
+        //template name will be used as key in database
+        addTemplateToDB(node, Name);
     }
 }

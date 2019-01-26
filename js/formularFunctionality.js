@@ -38,7 +38,7 @@ function loadTemplate() {
             if (template[i].rowType.value == "Text Box") {
                 newInput.type = "text";
                 newInput.id = "text" + (i + 1);
-                newInput.value=" ";
+                newInput.value = " ";
                 newInput.style.paddingRight = "100px";
                 newInput.style.cssFloat = "right";
                 newInput.style.marginRight = "100px";
@@ -201,20 +201,20 @@ function saveFormContent() {
 //function will load form data which was previously saved
 function addDataToTemplate(data) {
     console.log(data)
-   
+
     for (var i = 0; i < data.length; i++) {
         //next three selections will check checkboxes if there is a record about them
-        if (data[i].checkbox2==1) {
+        if (data[i].checkbox2 == 1) {
 
             document.getElementById('check' + (i + 1) + " 2").checked = true;
         }
-        
-        if (data[i].checkbox3==1) {
+
+        if (data[i].checkbox3 == 1) {
 
             document.getElementById('check' + (i + 1) + " 3").checked = true;
         }
-      
-        if (data[i].checkbox1==1) {
+
+        if (data[i].checkbox1 == 1) {
             document.getElementById('check' + (i + 1) + " 1").checked = true;
         }
         //if there is stored template data checks if there is checked radio button and sets it true if exists
@@ -223,27 +223,26 @@ function addDataToTemplate(data) {
         }
         //if there is a record about text field this will load data to texbox
         if (data[i].text) {
-           
-            document.getElementById('text' + (i + 1)).value=data[i].text.value;
-            
+
+            document.getElementById('text' + (i + 1)).value = data[i].text.value;
+
         }
     }
 }
 //function will add options to formular droplist
-function updateFormular(){
-    var node=document.getElementById('formList');
-    node.innerHTML="";
-    var defaultOption=document.createElement('option');
-    defaultOption.textContent="Select formular";
+function updateFormular() {
+    var node = document.getElementById('formList');
+    node.innerHTML = "";
+    var defaultOption = document.createElement('option');
+    defaultOption.textContent = "Select formular";
     node.appendChild(defaultOption);
-    var keys=forms.keys();
-    for(var i=0;i<forms.size;i++)
-    {
-        var newOption=document.createElement('option');
-        
-        newOption.text=keys.next().value;
-        newOption.id='option'+(i+1);
+    var keys = forms.keys();
+    for (var i = 0; i < forms.size; i++) {
+        var newOption = document.createElement('option');
+
+        newOption.text = keys.next().value;
+        newOption.id = 'option' + (i + 1);
         node.appendChild(newOption);
-        document.getElementById('formList').setAttribute("onchange",'loadTemplate()')
+        document.getElementById('formList').setAttribute("onchange", 'loadTemplate()')
     }
 }

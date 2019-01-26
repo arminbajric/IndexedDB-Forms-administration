@@ -51,19 +51,32 @@ function addTemplateToDB(data, key, objectStore) {
     };
 
 }
-var htmlData;
-function searchforTemplate(key, objStore) {
-    var request = window.indexedDB.open('formsTemplateDB', 1);
-   
-    request.onsuccess = function (event) {
-        var db = event.target.result;
-        var tx = db.transaction("formsTemplate", 'readwrite');
-        var store = tx.objectStore("formsTemplate");
-        data1 = store.get("\"" + key + "\"");
-        data1.onsuccess = function (event) {
-           htmlData= data1.result;
 
-        }
+var htmlData;
+function searchforTemplate(key) {
+   
+     var state;
+    var request = window.indexedDB.open('formsTemplateDB', 1);
+    
+    request.onsuccess = function (event) {
+         db = request.result;
+         var tx = db.transaction("formsTemplate", 'readwrite');
+    var store = tx.objectStore("formsTemplate");
+    var data = store.get("\"" + key + "\"");
+    data.onsuccess=function (event){
+        if(data.result)
+        {
+        showFoundedTemplate(data.result);   
+    console.log('successsssssssssssssss')
+    state=1;
+}
     }
-   return htmlData;
+    
+    }
+    
+    
+ 
+ 
+    return state;
+
 }
