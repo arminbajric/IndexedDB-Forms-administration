@@ -9,7 +9,7 @@ function openTab(evt, tabName) {
     for (i = 0; i < tabcontent.length; i++) {
         tabcontent[i].style.display = "none";
     }
-    updateFormular();
+   updateFormularList();
     // deactivating tabs
     tablinks = document.getElementsByClassName("tablinks");
     for (i = 0; i < tablinks.length; i++) {
@@ -27,7 +27,7 @@ function init() {
     if (window.indexedDB) {
         checkDB();
         document.getElementById("Administrator").style.display = "block";
-        updateFormular();
+        updateFormularList();
     }
     else {
         document.getElementById('mainContainer').innerHTML = "<h2>Error!IndexedDB is not supported<br>Try other browser!</h2>";
@@ -44,65 +44,68 @@ function init() {
 
 //function which will search for wanted formular template and will offer creating new template if wanted is not founded
 function searchForFormular() {
-    //block which will reset form block for new search
-    var node = document.getElementById('form block');
-    if (node) {
-        node.innerHTML = "";
+    if (document.getElementById('search').value != "") {
+        //block which will reset form block for new search
+
+        var node = document.getElementById('form block');
+        if (node) {
+            node.innerHTML = "";
+        }
+        var save = document.getElementById("saveButton");
+        if (save) {
+            save.innerHTML = "";
+        }
+
+        //block will check if wanted formular is in store and will call to load template if it does
+
+        var data = searchforTemplate(document.getElementById('search').value);
+
+
+        if (data) {
+            //if template is founded it will be passed to function to display it
+
+            //save button will be added for template editing
+            var node = document.getElementById("saveButton");
+
+            var saveButton = document.createElement('button');
+            saveButton.value = "Save";
+            saveButton.textContent = "Save";
+            saveButton.id = "saveForm";
+            saveButton.className = "saveButton";
+            node.append(saveButton);
+            document.getElementById('saveForm').setAttribute("onclick", 'saveForm()');
+            htmlData = "";
+            rowsCount = document.getElementById('form block').childElementCount;
+        }
+
+
+
+
+        else {
+            rowsCount = 1;
+            //this block will be activated if wanted formular is not found and it will add first row of new formular which will be saved as search query
+            //creating first row
+            createNewRowForm();
+            //displaying and setting save button for new form
+            var node = document.getElementById("saveButton");
+
+            var saveButton = document.createElement('button');
+
+            saveButton.value = "Save";
+            saveButton.textContent = "Save";
+            saveButton.id = "saveForm";
+            saveButton.className = "saveButton";
+            node.append(saveButton);
+            document.getElementById('saveForm').setAttribute("onclick", 'saveForm()');
+            //displaying and setting Add button which adds new row in form
+            var newAdd = document.createElement('input');
+            newAdd.type = "button";
+            newAdd.textContent = "Add new";
+            newAdd.id = "Add" + rowsCount;
+            newAdd.onclick = "createNewRowForm()";
+        }
     }
-    var save = document.getElementById("saveButton");
-    if (save) {
-        save.innerHTML = "";
-    }
 
-    //block will check if wanted formular is in store and will call to load template if it does
-   
-    var data = searchforTemplate(document.getElementById('search').value);
-    
-   
-    if (data) {
-        //if template is founded it will be passed to function to display it
-      
-        //save button will be added for template editing
-        var node = document.getElementById("saveButton");
-
-        var saveButton = document.createElement('button');
-        saveButton.value = "Save";
-        saveButton.textContent = "Save";
-        saveButton.id = "saveForm";
-        saveButton.className = "saveButton";
-        node.append(saveButton);
-        document.getElementById('saveForm').setAttribute("onclick", 'saveForm()');
-        htmlData = "";
-        rowsCount = document.getElementById('form block').childElementCount;
-    }
-
-
-
-
-    else {
-        rowsCount = 1;
-        //this block will be activated if wanted formular is not found and it will add first row of new formular which will be saved as search query
-        //creating first row
-        createNewRowForm();
-        //displaying and setting save button for new form
-        var node = document.getElementById("saveButton");
-
-        var saveButton = document.createElement('button');
-
-        saveButton.value = "Save";
-        saveButton.textContent = "Save";
-        saveButton.id = "saveForm";
-        saveButton.className = "saveButton";
-        node.append(saveButton);
-        document.getElementById('saveForm').setAttribute("onclick", 'saveForm()');
-        //displaying and setting Add button which adds new row in form
-        var newAdd = document.createElement('input');
-        newAdd.type = "button";
-        newAdd.textContent = "Add new";
-        newAdd.id = "Add" + rowsCount;
-        newAdd.onclick = "createNewRowForm()";
-    }
-    
 
 }
 
@@ -576,7 +579,7 @@ function saveForm() {
     var formName = document.getElementById('search');
     if (formName) {
         var Name = formName.value;
-        var form = [];
+
         //loop will update html code an prepare it for save to database
         //html elemets properties will be added and updated
         for (var i = 0; i < numberOdRows; i++) {
@@ -599,7 +602,7 @@ function saveForm() {
                 document.getElementById('countRadio' + (i + 1) + " 2").defaultValue = document.getElementById('countRadio' + (i + 1) + " 2").value;
             }
             if (document.getElementById('countRadio' + (i + 1) + " 3")) {
-               
+
                 document.getElementById('countRadio' + (i + 1) + " 3").defaultValue = document.getElementById('countRadio' + (i + 1) + " 3").value;
             }
             if (document.getElementById('radioCoun' + (i + 1))) {
@@ -616,12 +619,110 @@ function saveForm() {
             }
         }
 
-       //after html code is updated and adjusted it will be stored to variable
-      
+        //after html code is updated and adjusted it will be stored to variable
+
         var node = document.getElementById('form block').innerHTML;
         console.log(node);
         //here function will be called to store new or updated template,along with template code function will get template name
         //template name will be used as key in database
         addTemplateToDB(node, Name);
+        generateAndSaveFormularTemplate();
     }
+}
+
+//function will generate and update html code and prepare it for save
+function generateAndSaveFormularTemplate() {
+    rows = document.getElementById('form block').childElementCount;
+    var parentNode = document.createElement('div');
+    console.log(rows + "    sssssss");
+    for (var i = 0; i < rows; i++) {
+        var rowNode = document.createElement('div');
+
+        var newLabel = document.createElement('label');
+        newLabel.textContent = document.getElementById('inpt'+(i+1)).value;
+        newLabel.className = "leftMarginForm";
+        newLabel.id = "lbl " + (i + 1);
+        rowNode.appendChild(newLabel);
+        if (document.getElementById('inputType' + (i + 1)).value == "Text Box") {
+            console.log('creating textttt input')
+            var newInput=document.createElement('input');
+            newInput.type = "text";
+            newInput.id = "text" + (i + 1);
+            newInput.value = " ";
+            newInput.style.paddingRight = "100px";
+            newInput.style.cssFloat = "right";
+            newInput.style.marginRight = "100px";
+            rowNode.appendChild(newInput);
+        }
+
+
+        var check1 = document.getElementById('countRadio'+(i+1)+" 1");
+
+        var check2 = document.getElementById('countRadio'+(i+1)+" 2");
+
+        var check3 = document.getElementById('countRadio'+(i+1)+" 3");
+
+        //checking if two radios are in store ,setting them and adding to parent node
+        if (check1 && check2 && !check3) {
+            var radioBlock = document.createElement('div');
+
+            radioBlock.style.display = "block";
+            radioBlock.style.marginLeft = "150px";
+            radioBlock.innerHTML = "<form><input type=\"radio\" id=\"radio" + (i + 1) + " 1\" value=\"value" + (i + 1) + "\"> " + check1.value + "<br><input type=\"radio\" id=\"radio" + (i + 1) + " 2\" value=\"value" + (i + 2) + "\"> " + check2.value + "<br></form>";
+            rowNode.appendChild(radioBlock);
+            rowNode.appendChild(document.createElement('hr'));
+
+        }
+        //checking if all three radios are present in store,setting them and adding to parent node
+        if (check1 && check2 && check3) {
+            var radioBlock = document.createElement('div');
+
+            radioBlock.style.display = "block";
+            radioBlock.style.marginLeft = "150px";
+            radioBlock.innerHTML = "<form><input type=\"radio\" id=\"radio" + (i + 1) + " 1\" value=\"value" + (i + 1) + "\"> " + check1.value + "<br><input type=\"radio\" id=\"radio" + (i + 1) + " 2\" value=\"value" + (i + 2) + "\"> " + check2.value + "<br><input type=\"radio\" id=\"radio" + (i + 1) + " 3\" value=\"value" + (i + 3) + "\"> " + check3.value + "<br></form>";
+            rowNode.appendChild(radioBlock);
+            rowNode.appendChild(document.createElement('hr'));
+        }
+
+
+        var check1 = document.getElementById('countCheck'+(i+1)+" 1");
+
+        var check2 = document.getElementById('countCheck'+(i+1)+" 2");
+
+        var check3 = document.getElementById('countCheck'+(i+1)+" 3");
+        //selection will be executed if only first checkbox is present in store
+        if (check1 && !check2 && !check3) {
+            var checkBlock = document.createElement('div');
+            checkBlock.style.display = "block";
+            checkBlock.style.marginLeft = "150px";
+            checkBlock.innerHTML = "<form><input type=\"checkbox\" id=\"check" + (i + 1) + "1\">" + check1.value + "</form>";
+            rowNode.appendChild(checkBlock);
+            rowNode.appendChild(document.createElement('hr'));
+        }
+
+        //selection will be executed if two checkboxes are present in store
+        if (check1 && check2 && !check3) {
+            var checkBlock = document.createElement('div');
+            checkBlock.style.display = "block";
+            checkBlock.style.marginLeft = "150px";
+            checkBlock.innerHTML = "<form><input type=\"checkbox\" id=\"check" + (i + 1) + " 1\">" + check1.value + "<br><input type=\"checkbox\" id=\"check" + (i + 1) + " 2\">" + check2.value + "</form>";
+            rowNode.appendChild(checkBlock);
+            rowNode.appendChild(document.createElement('hr'));
+        }
+
+        //selection will be executed if all three checkboxes are present
+        if (check1 && check2 && check3) {
+            var checkBlock = document.createElement('div');
+            checkBlock.style.display = "block";
+            checkBlock.style.marginLeft = "150px";
+            checkBlock.innerHTML = "<form><input type=\"checkbox\" id=\"check" + (i + 1) + " 1\">" + check1.value + "<br><input type=\"checkbox\" id=\"check" + (i + 1) + " 2\">" + check2.value + "<br><input type=\"checkbox\" id=\"check" + (i + 1) + " 3\">" + check3.value + "</form>";
+            rowNode.appendChild(checkBlock);
+            rowNode.appendChild(document.createElement('hr'));
+        }
+        parentNode.appendChild(rowNode);
+        console.log(parentNode.innerHTML);
+    }
+    addFormularTemplateToDB(parentNode.innerHTML,document.getElementById('search').value);
+    //after save function will refresh formular list in formular tab
+   updateFormularList();
 }
