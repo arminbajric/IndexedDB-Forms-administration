@@ -9,7 +9,7 @@ function openTab(evt, tabName) {
     for (i = 0; i < tabcontent.length; i++) {
         tabcontent[i].style.display = "none";
     }
-   updateFormularList();
+    updateFormularList();
     // deactivating tabs
     tablinks = document.getElementsByClassName("tablinks");
     for (i = 0; i < tablinks.length; i++) {
@@ -75,7 +75,7 @@ function searchForFormular() {
             node.append(saveButton);
             document.getElementById('saveForm').setAttribute("onclick", 'saveForm()');
             htmlData = "";
-            rowsCount = document.getElementById('form block').childElementCount;
+
         }
 
 
@@ -113,6 +113,8 @@ function searchForFormular() {
 
 function showFoundedTemplate(htmlData) {
     document.getElementById('form block').innerHTML = htmlData;
+    //number od rows will be retrieved for case user add more rows
+    rowsCount = document.getElementById('form block').childElementCount + 1;
 }
 
 
@@ -140,7 +142,7 @@ function createNewRowForm() {
     var newLabel = document.createElement('label');
     newLabel.textContent = 'Element ' + rowsCount + ' :';
     newLabel.className = "leftMarginForm";
-    newLabel.id = "lbl " + rowsCount;
+    newLabel.id = "label " + rowsCount;
     //adding label to div element,label have id and class assigned
     newDiv.appendChild(newLabel);
     //creating text input for label which was created above
@@ -238,7 +240,7 @@ function setQuantity(id) {
         document.getElementById('type' + row + "" + "2").setAttribute('selected', "true");
         document.getElementById('type' + row + "" + "3").removeAttribute('selected');
     }
-    else if(quantity=="Numeric") {
+    else if (quantity == "Numeric") {
         document.getElementById('type' + row + "" + "1").removeAttribute('selected');
         document.getElementById('type' + row + "" + "2").removeAttribute('selected');
         document.getElementById('type' + row + "" + "3").setAttribute('selected', "true");
@@ -255,7 +257,21 @@ function setQuantity(id) {
 function createAdditions(id, selected) {
     var row = id.charAt(9);
 
-    console.log(row + 'rrrrrrrrrrrrred')
+    //block off selections will remove numeric input type if input is check box or radio button
+    //also if user choose text box input it will check if numeric option is available and if not it will add it
+    if (selected == "Check Box" || selected == "Radio Button") {
+        document.getElementById('type' + row + "3").remove();
+    }
+    else if (selected == "Text Box") {
+        if (!document.getElementById('type' + row + '3')) {
+            var node = document.getElementById('typeDrop ' + row);
+            var opt = document.createElement('option');
+            opt.textContent = "Numeric";
+            opt.id = 'type' + row + '3';
+            node.appendChild(opt);
+        }
+    }
+
     if (id.charAt(0) === 'i' && selected == 'Radio Button') {
         var element = document.getElementById('checkCoun' + id.charAt(9));
         if (element) {
@@ -267,7 +283,6 @@ function createAdditions(id, selected) {
         document.getElementById('opt' + row + "" + "1").removeAttribute('selected');
         document.getElementById('opt' + row + "" + "2").removeAttribute('selected');
         document.getElementById('opt' + row + "" + "3").setAttribute('selected', true);
-
         createRadioInputCount(id);
     }
     else if (id.charAt(0) === 'i' && selected == 'Check Box') {
@@ -303,7 +318,6 @@ function createAdditions(id, selected) {
 
 //function which will create dropbox with options 
 function createRadioInputCount(id) {
-
     var row = id.charAt(9);
     var existingDiv = document.getElementById('row' + row);
     var newRadioCountInput = document.createElement('select');
@@ -570,11 +584,11 @@ function removeCheckInputs(row) {
         element3.remove();
     }
 }
-var forms = new Map();
+
 //function will save form template saving form code
 function saveForm() {
-    console.log(rowsCount);
-    var test;
+
+
     var numberOdRows = rowsCount - 1;
     var formName = document.getElementById('search');
     if (formName) {
@@ -639,30 +653,38 @@ function generateAndSaveFormularTemplate() {
         var rowNode = document.createElement('div');
 
         var newLabel = document.createElement('label');
-        newLabel.textContent = document.getElementById('inpt'+(i+1)).value;
+        newLabel.textContent = document.getElementById('inpt' + (i + 1)).value;
+        if (document.getElementById('typeDrop ' + (i + 1) + "").value == "Mandatory") {
+            newLabel.textContent += "*";
+        }
+        if (document.getElementById('typeDrop ' + (i + 1) + "").value == "Numeric") {
+            newLabel.textContent += "(numeric)";
+        }
         newLabel.className = "leftMarginForm";
         newLabel.id = "lbl " + (i + 1);
         rowNode.appendChild(newLabel);
         if (document.getElementById('inputType' + (i + 1)).value == "Text Box") {
             console.log('creating textttt input')
-            var newInput=document.createElement('input');
+            var newInput = document.createElement('input');
             newInput.type = "text";
             newInput.id = "text" + (i + 1);
             newInput.value = " ";
-            
-            newInput.oninput="setTextValue(this.id);";
+
+            newInput.setAttribute('oninput', "setTextValue(this.id);")
             newInput.style.paddingRight = "20%";
             newInput.style.cssFloat = "right";
             newInput.style.marginRight = "30%";
             rowNode.appendChild(newInput);
+            var line=document.createElement('hr');
+            rowNode.appendChild(line);
         }
 
 
-        var check1 = document.getElementById('countRadio'+(i+1)+" 1");
+        var check1 = document.getElementById('countRadio' + (i + 1) + " 1");
 
-        var check2 = document.getElementById('countRadio'+(i+1)+" 2");
+        var check2 = document.getElementById('countRadio' + (i + 1) + " 2");
 
-        var check3 = document.getElementById('countRadio'+(i+1)+" 3");
+        var check3 = document.getElementById('countRadio' + (i + 1) + " 3");
 
         //checking if two radios are in store ,setting them and adding to parent node
         if (check1 && !check2 && !check3) {
@@ -670,7 +692,7 @@ function generateAndSaveFormularTemplate() {
 
             radioBlock.style.display = "block";
             radioBlock.style.marginLeft = "150px";
-        
+
             radioBlock.innerHTML = "<form><input onclick=\"radioChangeState(this.id)\" name=\"option\" type=\"radio\" id=\"radio" + (i + 1) + " 1\" value=\"value" + (i + 1) + "\"> " + check1.value + "<br></form>";
             rowNode.appendChild(radioBlock);
             rowNode.appendChild(document.createElement('hr'));
@@ -681,7 +703,7 @@ function generateAndSaveFormularTemplate() {
 
             radioBlock.style.display = "block";
             radioBlock.style.marginLeft = "150px";
-        
+
             radioBlock.innerHTML = "<form><input onclick=\"radioChangeState(this.id)\" name=\"option\" type=\"radio\" id=\"radio" + (i + 1) + " 1\" value=\"value" + (i + 1) + "\"> " + check1.value + "<br><input onclick=\"radioChangeState(this.id)\" name=\"option\" type=\"radio\" id=\"radio" + (i + 1) + " 2\" value=\"value" + (i + 2) + "\"> " + check2.value + "<br></form>";
             rowNode.appendChild(radioBlock);
             rowNode.appendChild(document.createElement('hr'));
@@ -699,17 +721,17 @@ function generateAndSaveFormularTemplate() {
         }
 
 
-        var check1 = document.getElementById('countCheck'+(i+1)+" 1");
+        var check1 = document.getElementById('countCheck' + (i + 1) + " 1");
 
-        var check2 = document.getElementById('countCheck'+(i+1)+" 2");
+        var check2 = document.getElementById('countCheck' + (i + 1) + " 2");
 
-        var check3 = document.getElementById('countCheck'+(i+1)+" 3");
+        var check3 = document.getElementById('countCheck' + (i + 1) + " 3");
         //selection will be executed if only first checkbox is present in store
         if (check1 && !check2 && !check3) {
             var checkBlock = document.createElement('div');
             checkBlock.style.display = "block";
             checkBlock.style.marginLeft = "150px";
-            checkBlock.innerHTML = "<form><input checked=\"unchecked\" onchange=\"checkBoxStateChanged(this.id)\" type=\"checkbox\" id=\"check" + (i + 1) + "1\">" + check1.value + "</form>";
+            checkBlock.innerHTML = "<form><input  onchange=\"checkBoxStateChanged(this.id)\" type=\"checkbox\" id=\"check" + (i + 1) + "1\">" + check1.value + "</form>";
             rowNode.appendChild(checkBlock);
             rowNode.appendChild(document.createElement('hr'));
         }
@@ -719,7 +741,7 @@ function generateAndSaveFormularTemplate() {
             var checkBlock = document.createElement('div');
             checkBlock.style.display = "block";
             checkBlock.style.marginLeft = "150px";
-            checkBlock.innerHTML = "<form><input onchange=\"checkBoxStateChanged(this.id)\" checked=\"unchecked\" type=\"checkbox\" id=\"check" + (i + 1) + " 1\">" + check1.value + "<br><input checked=\"unchecked\" onchange=\"checkBoxStateChanged(this.id)\" type=\"checkbox\" id=\"check" + (i + 1) + " 2\">" + check2.value + "</form>";
+            checkBlock.innerHTML = "<form><input onchange=\"checkBoxStateChanged(this.id)\"  type=\"checkbox\" id=\"check" + (i + 1) + " 1\">" + check1.value + "<br><input checked=\"unchecked\" onchange=\"checkBoxStateChanged(this.id)\" type=\"checkbox\" id=\"check" + (i + 1) + " 2\">" + check2.value + "</form>";
             rowNode.appendChild(checkBlock);
             rowNode.appendChild(document.createElement('hr'));
         }
@@ -737,66 +759,143 @@ function generateAndSaveFormularTemplate() {
         console.log(parentNode.innerHTML);
     }
     //formular template will be aded in two object stores,first templates for admin panel and second as empty version for formular tab
-    addFormularTemplateToDB(parentNode.innerHTML,document.getElementById('search').value);
-    addToFormularData(parentNode.innerHTML,document.getElementById('search').value);
+    addFormularTemplateToDB(parentNode.innerHTML, document.getElementById('search').value);
+    addToFormularData(parentNode.innerHTML, document.getElementById('search').value);
     //after save function will refresh formular list in formular tab
-   updateFormularList();
+    updateFormularList();
 }
 
 // on check or uncheck function will update html code
-function checkBoxStateChanged(id){
+function checkBoxStateChanged(id) {
     console.log(id);
-    if(document.getElementById(id).getAttribute('checked'))
-    {
+    if (document.getElementById(id).getAttribute('checked')) {
         console.log('now unchecked')
         document.getElementById(id).removeAttribute('checked')
     }
-    else{
+    else {
         console.log('now cchecked')
-        document.getElementById(id).setAttribute('checked',true);
+        document.getElementById(id).setAttribute('checked', true);
     }
 }
-function checkInput(){
-    var str =document.getElementById('selectVersion').value;
-    if(/^[a-zA-Z0-9- ,_]*$/.test(str) == false){
-       alert('Special characters except ,  _  and - are not allowed!');
-       document.getElementById('selectVersion').value="";
+function checkInput(id) {
+    console.log(id);
+    var str = document.getElementById(id).value;
+    console.log('tessssssssssssss')
+    var pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';/{}|\\":<>\?]/);
+    console.log(str);
+    if (pattern.test(str)) {
+        alert('Special chars are not allowed!')
+        document.getElementById(id).value = "";
     }
+
 }
 //function will save checked radio button and update html code
-function radioChangeState(id)
-{
+function radioChangeState(id) {
     var str = id;
-    var res = str.split(" ",1).toString();
-   var row=res.substr(5);
-  
-    var radio=str.substr(str.length-1,1);
+    var res = str.split(" ", 1).toString();
+    var row = res.substr(5);
+
+    var radio = str.substr(str.length - 1, 1);
     console.log(radio)
-    if(radio=='1')
-    {
-        document.getElementById('radio'+row+' 1').setAttribute('checked','true');
-        document.getElementById('radio'+row+' 2').removeAttribute('checked');
-        document.getElementById('radio'+row+' 3').removeAttribute('checked');
+    if (radio == '1') {
+        document.getElementById('radio' + row + ' 1').setAttribute('checked', 'true');
+        document.getElementById('radio' + row + ' 2').removeAttribute('checked');
+        document.getElementById('radio' + row + ' 3').removeAttribute('checked');
 
     }
-    else if(radio=='2')
-    {
-        document.getElementById('radio'+row+' 2').setAttribute('checked','true');
-        document.getElementById('radio'+row+' 1').removeAttribute('checked');
-        document.getElementById('radio'+row+' 3').removeAttribute('checked');
+    else if (radio == '2') {
+        document.getElementById('radio' + row + ' 2').setAttribute('checked', 'true');
+        document.getElementById('radio' + row + ' 1').removeAttribute('checked');
+        document.getElementById('radio' + row + ' 3').removeAttribute('checked');
     }
-    else if(radio=='3')
-    {
-        document.getElementById('radio'+row+' 3').setAttribute('checked','true');
-        document.getElementById('radio'+row+' 2').removeAttribute('checked');
-        document.getElementById('radio'+row+' 1').removeAttribute('checked');
+    else if (radio == '3') {
+        document.getElementById('radio' + row + ' 3').setAttribute('checked', 'true');
+        document.getElementById('radio' + row + ' 2').removeAttribute('checked');
+        document.getElementById('radio' + row + ' 1').removeAttribute('checked');
     }
-   
+
 }
-function setTextValue(id)
-{
-    var iD=id;
-    row=iD.substr(iD.length-1,1);
+function setTextValue(id) {
+    var iD = id;
+    row = iD.substr(iD.length - 1, 1);
     console.log(row);
-    document.getElementById(id).setAttribute('value',document.getElementById(id).value);
+    document.getElementById(id).setAttribute('value', document.getElementById(id).value);
+}
+
+
+
+function numericInputValidation(value) {
+    var reg = new RegExp('^\\d+$');
+    if (reg.test(value)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+//function will loop trough all rows and will break saving on first unmeet condition
+function validateFormularData() {
+    console.log('validating')
+    var passed = true;
+    rows = document.getElementById('formularContent').childElementCount;
+    console.log(rows)
+    for (var i = 0; i < rows; i++) {
+        console.log('in looooooooooop')
+     
+            var str = document.getElementById('lbl ' + (i + 1)).textContent;
+            console.log(str);
+            if (str.indexOf("*") > 0) {
+                if (document.getElementById('text' + (i + 1))) {
+                    var input = document.getElementById('text' + (i + 1)).value;
+                    if (input != "") {
+                        return true;
+                    }
+                }
+                else if (document.getElementById('radio' + rows + " 1")) {
+                    if (document.getElementById('radio' + rows + " 1").hasAttribute('checked')) {
+                        return true;
+                    }
+                }
+                else if (document.getElementById('radio' + rows + " 2")) {
+                    if (document.getElementById('radio' + rows + " 2").hasAttribute('checked')) {
+                        return true;
+                    }
+                }
+                else if (document.getElementById('radio' + rows + " 3")) {
+                    if (document.getElementById('radio' + rows + " 3").hasAttribute('checked')) {
+                        return true;
+                    }
+                }
+
+                else if (document.getElementById("check" + rows + " 1")) {
+                   
+                    if (document.getElementById('check' + rows + " 1").hasAttribute('checked')) {
+                       
+                        return true;
+                    }
+                }
+                else if (document.getElementById('check' + rows + " 2")) {
+                    if (document.getElementById('check' + rows + " 2").hasAttribute('checked')) {
+                        console.log('radiiiiiiiiiiiiiiiiiiiiii')
+                        return true;
+                    }
+                }
+                else if (document.getElementById('check' + rows + " 3")) {
+                    if (document.getElementById('check' + rows + " 3").hasAttribute('checked')) {
+                        return true;
+                    }
+                }
+            }
+            else if (str.search('(numeric)') > -1) {
+                var input = document.getElementById('text' + (i + 1)).value;
+                if (numericInputValidation(input) == false) {
+                    return false;
+                }
+
+            }
+        
+
+    }
+    //function will return false at teh end because none od conditions are meet
+    return false;
 }

@@ -97,7 +97,7 @@ function addFormularTemplateToDB(data, key) {
         data1.onsuccess = function (event) {
 
             store.put(data, key);
-            console.log('insert doneeeeeee')
+
         }
 
 
@@ -169,7 +169,7 @@ function loadTemplate(query) {
             newVersion.type = "text";
             newVersion.placeholder = "Add custom version...";
             newVersion.id = "versionInput";
-            newVersion.setAttribute('onchange', 'checkInput();')
+            newVersion.setAttribute('onchange', 'checkInput(this.id);')
             node.appendChild(newVersion);
         }
     }
@@ -185,27 +185,32 @@ function saveFormularData() {
             version = 'ver1.00'
         }
         else {
-            version ='ver'+ Math.random().toString(36).substring(2, 5);;
+            version = 'ver' + Math.random().toString(36).substring(2, 5);;
         }
     }
-    var data = document.getElementById('formularContent').innerHTML;
-    var request = window.indexedDB.open('formsAdministrationDB', 1);
-    //if
-    request.onsuccess = function (event) {
-        var db = event.target.result;
+    //selection will check if formular requirements are meet and if they are it will proceed with saving
+    if (validateFormularData()) {
+        var data = document.getElementById('formularContent').innerHTML;
+        var request = window.indexedDB.open('formsAdministrationDB', 1);
+        //if
+        request.onsuccess = function (event) {
+            var db = event.target.result;
 
-        var tx = db.transaction('formularData', 'readwrite');
-        var store = tx.objectStore('formularData');
-        store.add(data, key + "%" + version);
-        document.getElementById('formularContent').innerHTML="";
-        document.getElementById('saveButtonContentFormular').innerHTML="";
-        getVersions();
-    };
-
+            var tx = db.transaction('formularData', 'readwrite');
+            var store = tx.objectStore('formularData');
+            store.add(data, key + "%" + version);
+            document.getElementById('formularContent').innerHTML = "";
+            document.getElementById('saveButtonContentFormular').innerHTML = "";
+            getVersions();
+        };
+    }
+    else {
+        alert('Error while saving.Check if inserted data meets input requirements!')
+    }
 }
 
 function checkForVersionCollision(objStore, inputVersion) {
-    var found = true;
+
     var request = window.indexedDB.open('formsAdministrationDB', 1);
     request.onsuccess = function (event) {
         var db = event.target.result;
@@ -237,23 +242,25 @@ function getVersions() {
                 var def = document.createElement('option');
                 def.textContent = "Select version";
                 document.getElementById('selectVersion').appendChild(def);
+                document.getElementById('formularContent').innerHTML = "";
+                document.getElementById('saveButtonContentFormular').innerHTML = ""
                 for (var i = 0; i < keys.length; i++) {
                     var name;
                     name = keys[i];
                     //selection will check if key matches selected formular and key pattern
-                    if (name.search(selected) > -1 && name.charAt(selected.length)=="%") {
+                    if (name.search(selected) > -1 && name.charAt(selected.length) == "%") {
                         var split = name.search('%');
                         if (split > -1) {
                             var ver = name.substr(split + 1);
                             console.log(ver + "   aaaaaaaa");
                             versionsExist = true;
-                          
-                          
+
+
                             var opt = document.createElement('option')
                             opt.textContent = ver;
-                           
+
                             document.getElementById('selectVersion').appendChild(opt);
-                            document.getElementById('selectVersion').setAttribute('onchange',"loadVersion()")
+                            document.getElementById('selectVersion').setAttribute('onchange', "loadVersion()")
                         }
                     }
                 }
@@ -271,14 +278,14 @@ function getVersions() {
             }
         }
     }
-    else{
-        document.getElementById('formularContent').innerHTML="";
-        document.getElementById('selectVersion').innerHTML="";
-        var option=document.createElement('option');
-        option.textContent="Select formular first";
+    else {
+        document.getElementById('formularContent').innerHTML = "";
+        document.getElementById('selectVersion').innerHTML = "";
+        var option = document.createElement('option');
+        option.textContent = "Select formular first";
         document.getElementById('selectVersion').appendChild(option);
-        document.getElementById('formularContent').innerHTML="";
-    document.getElementById('saveButtonContentFormular').innerHTML="";
+        document.getElementById('formularContent').innerHTML = "";
+        document.getElementById('saveButtonContentFormular').innerHTML = "";
     }
 }
 function addToFormularData(data, key) {
@@ -303,46 +310,44 @@ function addToFormularData(data, key) {
 }
 
 
-function loadVersion()
-{
-    if(document.getElementById('selectVersion').value!="Select version")
-    {
-    var version=document.getElementById('formList').value+"%"+document.getElementById('selectVersion').value;
-    console.log(version);
-    var request = window.indexedDB.open('formsAdministrationDB', 1);
-    var data1;
+function loadVersion() {
+    if (document.getElementById('selectVersion').value != "Select version") {
+        var version = document.getElementById('formList').value + "%" + document.getElementById('selectVersion').value;
+        console.log(version);
+        var request = window.indexedDB.open('formsAdministrationDB', 1);
+        var data1;
 
-    request.onsuccess = function (event) {
-        var db = event.target.result;
-        var tx = db.transaction("formularData", 'readwrite');
-        var store = tx.objectStore("formularData");
-        data1 = store.get(version);
-        data1.onsuccess = function (event) {
-          document.getElementById('formularContent').innerHTML=data1.result;
+        request.onsuccess = function (event) {
+            var db = event.target.result;
+            var tx = db.transaction("formularData", 'readwrite');
+            var store = tx.objectStore("formularData");
+            data1 = store.get(version);
+            data1.onsuccess = function (event) {
+                document.getElementById('formularContent').innerHTML = data1.result;
 
-           console.log('load done')
-        }
+                console.log('load done')
+            }
 
 
 
 
-    };
-    var node = document.getElementById('saveButtonContentFormular');
-    node.innerHTML="";
-    var newSave = document.createElement('button');
-    newSave.textContent = "Save data";
-    newSave.id = "saveData";
-    newSave.setAttribute('onclick', "saveFormularData()");
-    node.appendChild(newSave);
-    var newVersion = document.createElement('input');
-    newVersion.type = "text";
-    newVersion.placeholder = "Add custom version...";
-    newVersion.id = "versionInput";
-    newVersion.setAttribute('oninput', 'checkInput();')
-    node.appendChild(newVersion);
-}
-else{
-    document.getElementById('formularContent').innerHTML="";
-    document.getElementById('saveButtonContentFormular').innerHTML="";
-}
+        };
+        var node = document.getElementById('saveButtonContentFormular');
+        node.innerHTML = "";
+        var newSave = document.createElement('button');
+        newSave.textContent = "Save data";
+        newSave.id = "saveData";
+        newSave.setAttribute('onclick', "saveFormularData()");
+        node.appendChild(newSave);
+        var newVersion = document.createElement('input');
+        newVersion.type = "text";
+        newVersion.placeholder = "Add custom version...";
+        newVersion.id = "versionInput";
+        newVersion.setAttribute('oninput', 'checkInput(this.id);')
+        node.appendChild(newVersion);
+    }
+    else {
+        document.getElementById('formularContent').innerHTML = "";
+        document.getElementById('saveButtonContentFormular').innerHTML = "";
+    }
 }

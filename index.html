@@ -24,8 +24,8 @@
             <h3>Administrator</h3>
             <!--block which will list formulars if they are available and offer user to create new ones-->
             <div class="searchBlock">
-                <label class="item">Search</label><input class="item" id="search" type="text" placeholder="Search...."><input
-                    class="item" type="button" onclick="searchForFormular();" value="Search">
+                <label class="item">Search</label><input class="item" oninput="checkInput(this.id);" id="search" type="text" placeholder="Search...."><input
+                    class="item" type="button" onclick="searchForFormular();"  value="Search">
 
             </div>
             <hr>
