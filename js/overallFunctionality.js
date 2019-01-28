@@ -3,7 +3,7 @@ var rowsCount = 1;
 function openTab(evt, tabName) {
 
     var i, tabcontent, tablinks;
-    console.log('clicked');
+   
     //hiding all block with class tabcontent
     tabcontent = document.getElementsByClassName("tabcontent");
     for (i = 0; i < tabcontent.length; i++) {
@@ -219,7 +219,7 @@ function createNewRowForm() {
 
     //povećavanje varijable zbog identificiranja redova formulara
     rowsCount++;
-    console.log(rowsCount);
+   
     node.appendChild(newDiv);
 
 
@@ -229,7 +229,7 @@ function setQuantity(id) {
     row = id.charAt(9);
 
     var quantity = document.getElementById('typeDrop ' + row).value;
-    console.log(quantity + "   sssssssssss")
+   
     if (quantity == 'None') {
         document.getElementById('type' + row + "" + "1").setAttribute('selected', "true");
         document.getElementById('type' + row + "" + "2").removeAttribute('selected');
@@ -375,14 +375,14 @@ function createRadio(id, value) {
 
     //this will return the row where radio count is called
     var row = id.charAt(9);
-    console.log(row);
+  
     //if user change it's mind and chose one input this block will remove all radio inputs and add one at the end of function
     if (value === '1') {
         document.getElementById('quantityRadio' + row + "" + "1").setAttribute("selected", true);
         document.getElementById('quantityRadio' + row + "" + "2").removeAttribute('selected');
         document.getElementById('quantityRadio' + row + "" + "3").removeAttribute('selected');
         var element1 = document.getElementById('countRadio' + row + " " + 1);
-        console.log(typeof (element));
+       
         if (element1) {
 
             element1.remove()
@@ -406,7 +406,7 @@ function createRadio(id, value) {
         document.getElementById('quantityRadio' + row + "" + "2").setAttribute("selected", true);
         document.getElementById('quantityRadio' + row + "" + "3").removeAttribute('selected');
         var element2 = document.getElementById('countRadio' + row + " " + 2);
-        console.log(element2);
+     
         if (element2) {
 
             element2.remove();
@@ -460,14 +460,14 @@ function createCheckBox(id, value) {
 
     //this will return the row where radio count is called
     var row = id.charAt(9);
-    console.log(row);
+   
     //if user change it's mind and chose one input this block will remove all radio inputs and add one at the end of function
     if (value === '1') {
         document.getElementById('quantityCheck' + row + "" + "2").removeAttribute('selected');
         document.getElementById('quantityCheck' + row + "" + "1").setAttribute("selected", true);
         document.getElementById('quantityCheck' + row + "" + "3").removeAttribute('selected');
         var element1 = document.getElementById('countCheck' + row + " " + 1);
-        console.log(typeof (element));
+      
         if (element1) {
 
             element1.remove()
@@ -491,7 +491,7 @@ function createCheckBox(id, value) {
         document.getElementById('quantityCheck' + row + "" + "2").setAttribute("selected", true);
         document.getElementById('quantityCheck' + row + "" + "3").removeAttribute('selected');
         var element2 = document.getElementById('countCheck' + row + " " + 2);
-        console.log(element2);
+      
         if (element2) {
 
             element2.remove();
@@ -545,7 +545,7 @@ function createCheckBox(id, value) {
 //function will remove all radio buttons if input type is changed
 function removeRadioInputs(row) {
     var element1 = document.getElementById('countRadio' + row + " " + 1);
-    console.log(typeof (element));
+  
     if (element1) {
 
         element1.remove()
@@ -566,7 +566,7 @@ function removeRadioInputs(row) {
 //function will remove all checkbox inputs if input type is changed
 function removeCheckInputs(row) {
     var element1 = document.getElementById('countCheck' + row + " " + 1);
-    console.log(typeof (element));
+  
     if (element1) {
 
         element1.remove()
@@ -636,7 +636,7 @@ function saveForm() {
         //after html code is updated and adjusted it will be stored to variable
 
         var node = document.getElementById('form block').innerHTML;
-        console.log(node);
+     
         //here function will be called to store new or updated template,along with template code function will get template name
         //template name will be used as key in database
         addTemplateToDB(node, Name);
@@ -648,7 +648,7 @@ function saveForm() {
 function generateAndSaveFormularTemplate() {
     rows = document.getElementById('form block').childElementCount;
     var parentNode = document.createElement('div');
-    console.log(rows + "    sssssss");
+  
     for (var i = 0; i < rows; i++) {
         var rowNode = document.createElement('div');
 
@@ -664,7 +664,7 @@ function generateAndSaveFormularTemplate() {
         newLabel.id = "lbl " + (i + 1);
         rowNode.appendChild(newLabel);
         if (document.getElementById('inputType' + (i + 1)).value == "Text Box") {
-            console.log('creating textttt input')
+           
             var newInput = document.createElement('input');
             newInput.type = "text";
             newInput.id = "text" + (i + 1);
@@ -756,7 +756,7 @@ function generateAndSaveFormularTemplate() {
             rowNode.appendChild(document.createElement('hr'));
         }
         parentNode.appendChild(rowNode);
-        console.log(parentNode.innerHTML);
+      
     }
     //formular template will be aded in two object stores,first templates for admin panel and second as empty version for formular tab
     addFormularTemplateToDB(parentNode.innerHTML, document.getElementById('search').value);
@@ -767,22 +767,25 @@ function generateAndSaveFormularTemplate() {
 
 // on check or uncheck function will update html code
 function checkBoxStateChanged(id) {
-    console.log(id);
+   
     if (document.getElementById(id).getAttribute('checked')) {
-        console.log('now unchecked')
+     
         document.getElementById(id).removeAttribute('checked')
     }
     else {
-        console.log('now cchecked')
+     
         document.getElementById(id).setAttribute('checked', true);
     }
 }
+
+//function will not allow special chars in version input an search input
+//value in search input is used as name of new template
 function checkInput(id) {
-    console.log(id);
+  
     var str = document.getElementById(id).value;
-    console.log('tessssssssssssss')
+ 
     var pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';/{}|\\":<>\?]/);
-    console.log(str);
+   
     if (pattern.test(str)) {
         alert('Special chars are not allowed!')
         document.getElementById(id).value = "";
@@ -796,7 +799,7 @@ function radioChangeState(id) {
     var row = res.substr(5);
 
     var radio = str.substr(str.length - 1, 1);
-    console.log(radio)
+   
     if (radio == '1') {
         document.getElementById('radio' + row + ' 1').setAttribute('checked', 'true');
         document.getElementById('radio' + row + ' 2').removeAttribute('checked');
@@ -818,7 +821,7 @@ function radioChangeState(id) {
 function setTextValue(id) {
     var iD = id;
     row = iD.substr(iD.length - 1, 1);
-    console.log(row);
+  
     document.getElementById(id).setAttribute('value', document.getElementById(id).value);
 }
 
@@ -834,16 +837,17 @@ function numericInputValidation(value) {
     }
 }
 //function will loop trough all rows and will break saving on first unmeet condition
+//if all conditions are meet it will return true value so procces could countinue
 function validateFormularData() {
-    console.log('validating')
+   
     var passed = true;
     rows = document.getElementById('formularContent').childElementCount;
-    console.log(rows)
+  
     for (var i = 0; i < rows; i++) {
-        console.log('in looooooooooop')
+       
      
             var str = document.getElementById('lbl ' + (i + 1)).textContent;
-            console.log(str);
+          
             if (str.indexOf("*") > 0) {
                 if (document.getElementById('text' + (i + 1))) {
                     var input = document.getElementById('text' + (i + 1)).value;
@@ -876,7 +880,7 @@ function validateFormularData() {
                 }
                 else if (document.getElementById('check' + rows + " 2")) {
                     if (document.getElementById('check' + rows + " 2").hasAttribute('checked')) {
-                        console.log('radiiiiiiiiiiiiiiiiiiiiii')
+                      
                         return true;
                     }
                 }

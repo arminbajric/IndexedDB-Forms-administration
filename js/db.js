@@ -1,27 +1,28 @@
+//function will check if object stores exist in database,if no it will create them
 
 function checkDB() {
     var request = window.indexedDB.open('formsAdministrationDB', 1);
 
     request.onupgradeneeded = function (event) {
         var db = event.target.result;
-        console.log('upgradeeeeeeee')
+      
         var list = db.objectStoreNames;
 
         if (!list.contains('administratorTemplate')) {
             var store = db.createObjectStore('administratorTemplate', { autoIncrement: true });
 
-            console.log("Store created")
+           
         }
         if (!list.contains('formularData')) {
             var store = db.createObjectStore('formularData', { autoIncrement: true });
 
-            console.log("Store created")
+           
         }
 
         if (!list.contains('formularTemplate')) {
             var store = db.createObjectStore('formularTemplate', { autoIncrement: true });
 
-            console.log("Store created")
+         
         }
 
     };
@@ -34,7 +35,7 @@ function checkDB() {
 
 
 
-
+//function will add template to database with its key which is name of template
 function addTemplateToDB(data, key, objectStore) {
     var request = window.indexedDB.open('formsAdministrationDB', 1);
     var data1;
@@ -47,7 +48,7 @@ function addTemplateToDB(data, key, objectStore) {
         data1.onsuccess = function (event) {
 
             store.put(data, key);
-            console.log('insert doneeeeeee')
+           
         }
 
 
@@ -105,6 +106,8 @@ function addFormularTemplateToDB(data, key) {
 
     };
 }
+
+//function will update formular list and listener on change will be added which will get formular versions on select
 function updateFormularList() {
     //this will make list empty and will add default option
     var node = document.getElementById('formList');
@@ -132,7 +135,7 @@ function updateFormularList() {
                 newOption.text = res[i];
                 newOption.id = 'option' + (i + 1);
                 node.appendChild(newOption);
-                console.log('list updated');
+              
             }
 
         }
@@ -209,21 +212,9 @@ function saveFormularData() {
     }
 }
 
-function checkForVersionCollision(objStore, inputVersion) {
 
-    var request = window.indexedDB.open('formsAdministrationDB', 1);
-    request.onsuccess = function (event) {
-        var db = event.target.result;
-        var tx = db.transaction(objStore, 'readwrite');
-        var store = tx.objectStore(objStore);
-        var data = store.get(inputVersion);
-        data.onerror = function () {
-            return false;
-        }
-    }
-
-}
-
+//function will fill list with formular versions if there are any,if no formular will be loaded for first time
+//and on first save first version will be generated
 function getVersions() {
     var selected = document.getElementById('formList').value;
     if (selected != "Select formular") {
@@ -237,7 +228,7 @@ function getVersions() {
             var data = store.getAllKeys();
             data.onsuccess = function () {
                 var keys = (data.result);
-                console.log(keys);
+            
                 document.getElementById('selectVersion').innerHTML = "";
                 var def = document.createElement('option');
                 def.textContent = "Select version";
@@ -252,7 +243,7 @@ function getVersions() {
                         var split = name.search('%');
                         if (split > -1) {
                             var ver = name.substr(split + 1);
-                            console.log(ver + "   aaaaaaaa");
+                           
                             versionsExist = true;
 
 
@@ -300,7 +291,7 @@ function addToFormularData(data, key) {
         data1.onsuccess = function (event) {
 
 
-            console.log('insert doneeeeeee')
+     
         }
 
 
@@ -309,11 +300,11 @@ function addToFormularData(data, key) {
     };
 }
 
-
+//this function will load selected version of formular
 function loadVersion() {
     if (document.getElementById('selectVersion').value != "Select version") {
         var version = document.getElementById('formList').value + "%" + document.getElementById('selectVersion').value;
-        console.log(version);
+       
         var request = window.indexedDB.open('formsAdministrationDB', 1);
         var data1;
 
@@ -325,7 +316,7 @@ function loadVersion() {
             data1.onsuccess = function (event) {
                 document.getElementById('formularContent').innerHTML = data1.result;
 
-                console.log('load done')
+              
             }
 
 
