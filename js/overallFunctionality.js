@@ -649,9 +649,9 @@ function generateAndSaveFormularTemplate() {
             newInput.type = "text";
             newInput.id = "text" + (i + 1);
             newInput.value = " ";
-            newInput.style.paddingRight = "100px";
+            newInput.style.paddingRight = "20%";
             newInput.style.cssFloat = "right";
-            newInput.style.marginRight = "100px";
+            newInput.style.marginRight = "30%";
             rowNode.appendChild(newInput);
         }
 
@@ -668,7 +668,8 @@ function generateAndSaveFormularTemplate() {
 
             radioBlock.style.display = "block";
             radioBlock.style.marginLeft = "150px";
-            radioBlock.innerHTML = "<form><input type=\"radio\" id=\"radio" + (i + 1) + " 1\" value=\"value" + (i + 1) + "\"> " + check1.value + "<br><input type=\"radio\" id=\"radio" + (i + 1) + " 2\" value=\"value" + (i + 2) + "\"> " + check2.value + "<br></form>";
+        
+            radioBlock.innerHTML = "<form><input name=\"option\" type=\"radio\" id=\"radio" + (i + 1) + " 1\" value=\"value" + (i + 1) + "\"> " + check1.value + "<br><input name=\"option\" type=\"radio\" id=\"radio" + (i + 1) + " 2\" value=\"value" + (i + 2) + "\"> " + check2.value + "<br></form>";
             rowNode.appendChild(radioBlock);
             rowNode.appendChild(document.createElement('hr'));
 
@@ -679,7 +680,7 @@ function generateAndSaveFormularTemplate() {
 
             radioBlock.style.display = "block";
             radioBlock.style.marginLeft = "150px";
-            radioBlock.innerHTML = "<form><input type=\"radio\" id=\"radio" + (i + 1) + " 1\" value=\"value" + (i + 1) + "\"> " + check1.value + "<br><input type=\"radio\" id=\"radio" + (i + 1) + " 2\" value=\"value" + (i + 2) + "\"> " + check2.value + "<br><input type=\"radio\" id=\"radio" + (i + 1) + " 3\" value=\"value" + (i + 3) + "\"> " + check3.value + "<br></form>";
+            radioBlock.innerHTML = "<form><input name=\"option\" type=\"radio\" id=\"radio" + (i + 1) + " 1\" value=\"value" + (i + 1) + "\"> " + check1.value + "<br><input name=\"option\" type=\"radio\" id=\"radio" + (i + 1) + " 2\" value=\"value" + (i + 2) + "\"> " + check2.value + "<br><input name=\"option\" type=\"radio\" id=\"radio" + (i + 1) + " 3\" value=\"value" + (i + 3) + "\"> " + check3.value + "<br></form>";
             rowNode.appendChild(radioBlock);
             rowNode.appendChild(document.createElement('hr'));
         }
@@ -695,7 +696,7 @@ function generateAndSaveFormularTemplate() {
             var checkBlock = document.createElement('div');
             checkBlock.style.display = "block";
             checkBlock.style.marginLeft = "150px";
-            checkBlock.innerHTML = "<form><input type=\"checkbox\" id=\"check" + (i + 1) + "1\">" + check1.value + "</form>";
+            checkBlock.innerHTML = "<form><input checked=\"unchecked\" onchange=\"checkBoxStateChanged(this.id)\" type=\"checkbox\" id=\"check" + (i + 1) + "1\">" + check1.value + "</form>";
             rowNode.appendChild(checkBlock);
             rowNode.appendChild(document.createElement('hr'));
         }
@@ -705,7 +706,7 @@ function generateAndSaveFormularTemplate() {
             var checkBlock = document.createElement('div');
             checkBlock.style.display = "block";
             checkBlock.style.marginLeft = "150px";
-            checkBlock.innerHTML = "<form><input type=\"checkbox\" id=\"check" + (i + 1) + " 1\">" + check1.value + "<br><input type=\"checkbox\" id=\"check" + (i + 1) + " 2\">" + check2.value + "</form>";
+            checkBlock.innerHTML = "<form><input onchange=\"checkBoxStateChanged(this.id)\" checked=\"unchecked\" type=\"checkbox\" id=\"check" + (i + 1) + " 1\">" + check1.value + "<br><input checked=\"unchecked\" onchange=\"checkBoxStateChanged(this.id)\" type=\"checkbox\" id=\"check" + (i + 1) + " 2\">" + check2.value + "</form>";
             rowNode.appendChild(checkBlock);
             rowNode.appendChild(document.createElement('hr'));
         }
@@ -715,7 +716,7 @@ function generateAndSaveFormularTemplate() {
             var checkBlock = document.createElement('div');
             checkBlock.style.display = "block";
             checkBlock.style.marginLeft = "150px";
-            checkBlock.innerHTML = "<form><input type=\"checkbox\" id=\"check" + (i + 1) + " 1\">" + check1.value + "<br><input type=\"checkbox\" id=\"check" + (i + 1) + " 2\">" + check2.value + "<br><input type=\"checkbox\" id=\"check" + (i + 1) + " 3\">" + check3.value + "</form>";
+            checkBlock.innerHTML = "<form><input onclick=\"checkBoxStateChanged(this.id)\"  type=\"checkbox\" id=\"check" + (i + 1) + " 1\">" + check1.value + "<br><input  onclick=\"checkBoxStateChanged(this.id)\" type=\"checkbox\" id=\"check" + (i + 1) + " 2\">" + check2.value + "<br><input  onclick=\"checkBoxStateChanged(this.id)\" type=\"checkbox\" id=\"check" + (i + 1) + " 3\">" + check3.value + "</form>";
             rowNode.appendChild(checkBlock);
             rowNode.appendChild(document.createElement('hr'));
         }
@@ -723,6 +724,28 @@ function generateAndSaveFormularTemplate() {
         console.log(parentNode.innerHTML);
     }
     addFormularTemplateToDB(parentNode.innerHTML,document.getElementById('search').value);
+    addToFormularData(parentNode.innerHTML,document.getElementById('search').value);
     //after save function will refresh formular list in formular tab
    updateFormularList();
+}
+
+
+function checkBoxStateChanged(id){
+    console.log(id);
+    if(document.getElementById(id).getAttribute('checked'))
+    {
+        console.log('now unchecked')
+        document.getElementById(id).removeAttribute('checked')
+    }
+    else{
+        console.log('now cchecked')
+        document.getElementById(id).setAttribute('checked',true);
+    }
+}
+function checkInput(){
+    var str =document.getElementById('selectVersion').value;
+    if(/^[a-zA-Z0-9- ,_]*$/.test(str) == false){
+       alert('Special characters except ,  _  and - are not allowed!');
+       document.getElementById('selectVersion').value="";
+    }
 }

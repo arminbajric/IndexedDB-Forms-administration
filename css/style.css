@@ -62,6 +62,7 @@
   }
   #formularList{
     margin-left: 10%;
+    float:left;
 
  }
  .labelInputForRadioCheck{
@@ -71,5 +72,14 @@
  }
  #saveButtonContent{
   margin-top:20px;
-  margin-left: 85%;
+  margin-left: 80%;
+}
+.version{
+  float: right;
+  margin-right: 100px;
+  display: flex;
+}
+#saveButtonContentFormular{
+  margin-top:20px;
+  margin-left: 70%;
 }
