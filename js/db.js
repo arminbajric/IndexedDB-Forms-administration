@@ -240,7 +240,8 @@ function getVersions() {
                 for (var i = 0; i < keys.length; i++) {
                     var name;
                     name = keys[i];
-                    if (name.search(selected) > -1) {
+                    //selection will check if key matches selected formular and key pattern
+                    if (name.search(selected) > -1 && name.charAt(selected.length)=="%") {
                         var split = name.search('%');
                         if (split > -1) {
                             var ver = name.substr(split + 1);
@@ -337,7 +338,7 @@ function loadVersion()
     newVersion.type = "text";
     newVersion.placeholder = "Add custom version...";
     newVersion.id = "versionInput";
-    newVersion.setAttribute('onchange', 'checkInput();')
+    newVersion.setAttribute('oninput', 'checkInput();')
     node.appendChild(newVersion);
 }
 else{

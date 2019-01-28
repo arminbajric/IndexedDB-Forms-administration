@@ -238,7 +238,7 @@ function setQuantity(id) {
         document.getElementById('type' + row + "" + "2").setAttribute('selected', "true");
         document.getElementById('type' + row + "" + "3").removeAttribute('selected');
     }
-    else {
+    else if(quantity=="Numeric") {
         document.getElementById('type' + row + "" + "1").removeAttribute('selected');
         document.getElementById('type' + row + "" + "2").removeAttribute('selected');
         document.getElementById('type' + row + "" + "3").setAttribute('selected', "true");
@@ -649,6 +649,8 @@ function generateAndSaveFormularTemplate() {
             newInput.type = "text";
             newInput.id = "text" + (i + 1);
             newInput.value = " ";
+            
+            newInput.oninput="setTextValue(this.id);";
             newInput.style.paddingRight = "20%";
             newInput.style.cssFloat = "right";
             newInput.style.marginRight = "30%";
@@ -663,13 +665,24 @@ function generateAndSaveFormularTemplate() {
         var check3 = document.getElementById('countRadio'+(i+1)+" 3");
 
         //checking if two radios are in store ,setting them and adding to parent node
+        if (check1 && !check2 && !check3) {
+            var radioBlock = document.createElement('div');
+
+            radioBlock.style.display = "block";
+            radioBlock.style.marginLeft = "150px";
+        
+            radioBlock.innerHTML = "<form><input onclick=\"radioChangeState(this.id)\" name=\"option\" type=\"radio\" id=\"radio" + (i + 1) + " 1\" value=\"value" + (i + 1) + "\"> " + check1.value + "<br></form>";
+            rowNode.appendChild(radioBlock);
+            rowNode.appendChild(document.createElement('hr'));
+
+        }
         if (check1 && check2 && !check3) {
             var radioBlock = document.createElement('div');
 
             radioBlock.style.display = "block";
             radioBlock.style.marginLeft = "150px";
         
-            radioBlock.innerHTML = "<form><input name=\"option\" type=\"radio\" id=\"radio" + (i + 1) + " 1\" value=\"value" + (i + 1) + "\"> " + check1.value + "<br><input name=\"option\" type=\"radio\" id=\"radio" + (i + 1) + " 2\" value=\"value" + (i + 2) + "\"> " + check2.value + "<br></form>";
+            radioBlock.innerHTML = "<form><input onclick=\"radioChangeState(this.id)\" name=\"option\" type=\"radio\" id=\"radio" + (i + 1) + " 1\" value=\"value" + (i + 1) + "\"> " + check1.value + "<br><input onclick=\"radioChangeState(this.id)\" name=\"option\" type=\"radio\" id=\"radio" + (i + 1) + " 2\" value=\"value" + (i + 2) + "\"> " + check2.value + "<br></form>";
             rowNode.appendChild(radioBlock);
             rowNode.appendChild(document.createElement('hr'));
 
@@ -680,7 +693,7 @@ function generateAndSaveFormularTemplate() {
 
             radioBlock.style.display = "block";
             radioBlock.style.marginLeft = "150px";
-            radioBlock.innerHTML = "<form><input name=\"option\" type=\"radio\" id=\"radio" + (i + 1) + " 1\" value=\"value" + (i + 1) + "\"> " + check1.value + "<br><input name=\"option\" type=\"radio\" id=\"radio" + (i + 1) + " 2\" value=\"value" + (i + 2) + "\"> " + check2.value + "<br><input name=\"option\" type=\"radio\" id=\"radio" + (i + 1) + " 3\" value=\"value" + (i + 3) + "\"> " + check3.value + "<br></form>";
+            radioBlock.innerHTML = "<form><input onclick=\"radioChangeState(this.id)\" name=\"option\" type=\"radio\" id=\"radio" + (i + 1) + " 1\" value=\"value" + (i + 1) + "\"> " + check1.value + "<br><input onclick=\"radioChangeState(this.id)\" name=\"option\" type=\"radio\" id=\"radio" + (i + 1) + " 2\" value=\"value" + (i + 2) + "\"> " + check2.value + "<br><input  onclick=\"radioChangeState(this.id)\" name=\"option\" type=\"radio\" id=\"radio" + (i + 1) + " 3\" value=\"value" + (i + 3) + "\"> " + check3.value + "<br></form>";
             rowNode.appendChild(radioBlock);
             rowNode.appendChild(document.createElement('hr'));
         }
@@ -723,13 +736,14 @@ function generateAndSaveFormularTemplate() {
         parentNode.appendChild(rowNode);
         console.log(parentNode.innerHTML);
     }
+    //formular template will be aded in two object stores,first templates for admin panel and second as empty version for formular tab
     addFormularTemplateToDB(parentNode.innerHTML,document.getElementById('search').value);
     addToFormularData(parentNode.innerHTML,document.getElementById('search').value);
     //after save function will refresh formular list in formular tab
    updateFormularList();
 }
 
-
+// on check or uncheck function will update html code
 function checkBoxStateChanged(id){
     console.log(id);
     if(document.getElementById(id).getAttribute('checked'))
@@ -748,4 +762,41 @@ function checkInput(){
        alert('Special characters except ,  _  and - are not allowed!');
        document.getElementById('selectVersion').value="";
     }
+}
+//function will save checked radio button and update html code
+function radioChangeState(id)
+{
+    var str = id;
+    var res = str.split(" ",1).toString();
+   var row=res.substr(5);
+  
+    var radio=str.substr(str.length-1,1);
+    console.log(radio)
+    if(radio=='1')
+    {
+        document.getElementById('radio'+row+' 1').setAttribute('checked','true');
+        document.getElementById('radio'+row+' 2').removeAttribute('checked');
+        document.getElementById('radio'+row+' 3').removeAttribute('checked');
+
+    }
+    else if(radio=='2')
+    {
+        document.getElementById('radio'+row+' 2').setAttribute('checked','true');
+        document.getElementById('radio'+row+' 1').removeAttribute('checked');
+        document.getElementById('radio'+row+' 3').removeAttribute('checked');
+    }
+    else if(radio=='3')
+    {
+        document.getElementById('radio'+row+' 3').setAttribute('checked','true');
+        document.getElementById('radio'+row+' 2').removeAttribute('checked');
+        document.getElementById('radio'+row+' 1').removeAttribute('checked');
+    }
+   
+}
+function setTextValue(id)
+{
+    var iD=id;
+    row=iD.substr(iD.length-1,1);
+    console.log(row);
+    document.getElementById(id).setAttribute('value',document.getElementById(id).value);
 }
