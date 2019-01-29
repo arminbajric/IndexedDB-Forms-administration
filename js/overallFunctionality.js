@@ -891,6 +891,7 @@ function validateFormularData() {
                 }
             }
             if (str.search('(numeric)') > -1) {
+               
                 var input = document.getElementById('text' + (i + 1)).value;
                 if (numericInputValidation(input)==false ) {
                     return false;
@@ -902,5 +903,5 @@ function validateFormularData() {
 
     }
    
-    return true;
+    return false;
 }

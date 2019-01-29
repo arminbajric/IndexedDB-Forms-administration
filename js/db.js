@@ -94,11 +94,10 @@ function addFormularTemplateToDB(data, key) {
         var db = event.target.result;
         var tx = db.transaction("formularTemplate", 'readwrite');
         var store = tx.objectStore("formularTemplate");
-        data1 = store.get(key);
+        data1 = store.add(data,key);
         data1.onsuccess = function (event) {
 
-            store.put(data, key);
-
+          
         }
 
 
