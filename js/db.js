@@ -188,7 +188,7 @@ function saveFormularData() {
             version = 'ver1.00'
         }
         else {
-            version = 'ver' + Math.random().toString(36).substring(2, 5);;
+            version = 'ver.' + Math.random().toString(36).substring(2, 5);;
         }
     }
     //selection will check if formular requirements are meet and if they are it will proceed with saving

@@ -895,6 +895,9 @@ function validateFormularData() {
                 if (numericInputValidation(input) == false) {
                     return false;
                 }
+                else{
+                    return true;
+                }
 
             }
         
