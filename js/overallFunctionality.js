@@ -840,10 +840,10 @@ function numericInputValidation(value) {
 //if all conditions are meet it will return true value so procces could countinue
 function validateFormularData() {
    
-    var passed = true;
+    
     rows = document.getElementById('formularContent').childElementCount;
-  
-    for (var i = 0; i < rows; i++) {
+   
+    for (var i = 0; i <rows; i++) {
        
      
             var str = document.getElementById('lbl ' + (i + 1)).textContent;
@@ -890,19 +890,17 @@ function validateFormularData() {
                     }
                 }
             }
-            else if (str.search('(numeric)') > -1) {
+            if (str.search('(numeric)') > -1) {
                 var input = document.getElementById('text' + (i + 1)).value;
-                if (numericInputValidation(input) == false) {
+                if (numericInputValidation(input)==false ) {
                     return false;
                 }
-                else{
-                    return true;
-                }
+                
 
             }
         
 
     }
-    //function will return false at teh end because none od conditions are meet
+   
     return true;
 }
