@@ -901,5 +901,5 @@ function validateFormularData() {
 
     }
     //function will return false at teh end because none od conditions are meet
-    return false;
+    return true;
 }
